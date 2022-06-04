@@ -1,0 +1,5 @@
+kubeconfig
+.terraform*
+terraform.tfstate
+*.backup
+secrets.yaml
