@@ -86,7 +86,6 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       restartPolicy: Always
-      runtimeClassName: gvisor
       schedulerName: default-scheduler
       shareProcessNamespace: false
       terminationGracePeriodSeconds: 30

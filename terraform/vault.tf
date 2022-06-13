@@ -41,7 +41,6 @@ resource "helm_release" "vault-secrets-webhook" {
   }
 }
 
-
 resource "kubernetes_ingress_v1" "vault_ingress" {
   metadata {
     name = "vault-ingress"
