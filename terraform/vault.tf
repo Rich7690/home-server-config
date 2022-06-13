@@ -76,7 +76,7 @@ resource "kubernetes_ingress_v1" "vault_ingress" {
     }
     tls {
       hosts       = [var.domain_name, "*.${var.domain_name}"]
-      secret_name = "prod-cert" //TOD: create secret with TLS certs
+      secret_name = "prod-cert" //TODO: create secret with TLS certs
     }
   }
 

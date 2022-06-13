@@ -9,6 +9,12 @@ variable "domain_name" {
   sensitive   = true
 }
 
+variable "external_domain" {
+  type        = string
+  description = "Domain used for services running within the cluster, but exposed publically (example.com)"
+  sensitive   = true
+}
+
 locals {
   // Common linux ids used for various applications
   system_uid  = "998"
