@@ -15,9 +15,28 @@ variable "external_domain" {
   sensitive   = true
 }
 
+variable "ping_id" {
+  type        = string
+  description = "ping id used for scraping health checks"
+  sensitive   = true
+}
+
 locals {
   // Common linux ids used for various applications
   system_uid  = "998"
   system_gid  = "997"
   combined_id = "${local.system_uid}:${local.system_gid}"
+}
+
+
+// argo cd manifest kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+resource "kubernetes_namespace_v1" "argocd" {
+  metadata {
+    name = "argocd"
+    labels = {
+      "app" = "argocd"
+    }
+  }
+
 }

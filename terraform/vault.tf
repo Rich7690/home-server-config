@@ -11,6 +11,7 @@ resource "helm_release" "vault" {
   chart       = "vault"
   repository  = "https://kubernetes-charts.banzaicloud.com"
   max_history = 3
+  version = "1.15.5"
 
   set {
     name  = "image.tag"
@@ -34,6 +35,7 @@ resource "helm_release" "vault-secrets-webhook" {
   chart       = "vault-secrets-webhook"
   repository  = "https://kubernetes-charts.banzaicloud.com"
   max_history = 3
+  version = "1.15.11"
 
   set {
     name  = "env.VAULT_IMAGE"
