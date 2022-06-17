@@ -17,6 +17,7 @@ spec:
             PUID: "998"
             TZ: America/Los_Angeles
         image:
+            repository: ghcr.io/linuxserver/ombi
             tag: 4.16.12
         persistence:
             config:
