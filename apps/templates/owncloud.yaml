@@ -14,21 +14,24 @@ spec:
       values: |
          env:
            TZ: America/Los_Angeles
+           OCIS_INSECURE: true
          image:
            tag: 2.0.0-beta.3
          persistence:
-           ocis:
+           data:
              enabled: true
-             subPath: ocis
+             subPath: data
              type: hostPath
              hostPathType: Directory
              hostPath: /work/storage/configs/owncloud
+             mountPath: /var/lib/ocis
            config:
              enabled: true
              subPath: config
              type: hostPath
              hostPathType: Directory
              hostPath: /work/storage/configs/owncloud
+             mountPath: /etc/ocis
   destination:
     server: "https://kubernetes.default.svc"
     namespace: default
