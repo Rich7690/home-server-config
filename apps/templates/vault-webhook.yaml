@@ -4,7 +4,7 @@ metadata:
   name: vault-secrets-webhook
   namespace: argocd
 spec:
-  project: default
+  project: remote-apps
   source:
     chart: vault-secrets-webhook
     repoURL: https://kubernetes-charts.banzaicloud.com
