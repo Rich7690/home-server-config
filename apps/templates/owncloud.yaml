@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: owncloud-ocis
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: owncloud-ocis
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: 2.3.2
+    helm:
+      releaseName: owncloud-ocis
+      values: |
+         env:
+           TZ: America/Los_Angeles
+         image:
+           tag: 2.0.0-beta.3
+         persistence:
+           ocis:
+             enabled: true
+             subPath: ocis
+             type: hostPath
+             hostPathType: Directory
+             hostPath: /work/storage/configs/owncloud
+           config:
+             enabled: true
+             subPath: config
+             type: hostPath
+             hostPathType: Directory
+             hostPath: /work/storage/configs/owncloud
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
