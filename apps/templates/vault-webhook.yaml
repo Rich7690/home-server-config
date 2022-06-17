@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault-secrets-webhook
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: vault-secrets-webhook
+    repoURL: https://kubernetes-charts.banzaicloud.com
+    targetRevision: 1.15.11
+    helm:
+      releaseName: vault-secrets-webhook
+      values: |
+         env:
+           VAULT_IMAGE: vault:1.10.3
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
