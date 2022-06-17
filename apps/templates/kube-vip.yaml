@@ -53,7 +53,7 @@ spec:
             - name: lb_fwdmethod
               value: local
             - name: vip_address
-          image: ghcr.io/kube-vip/kube-vip:v0.4.4
+          image: ghcr.io/kube-vip/kube-vip:v0.4.4@sha256:f59745f64f8e02158bc5aa70fb24e123e3f3891ca9bb86f8c259076e41a81924
           imagePullPolicy: Always
           name: kube-vip
           resources: {}

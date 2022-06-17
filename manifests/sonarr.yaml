@@ -28,7 +28,7 @@ spec:
             - configMapRef:
                 name: common-vars
                 optional: false
-          image: lscr.io/linuxserver/sonarr:3.0.8
+          image: lscr.io/linuxserver/sonarr:3.0.8@sha256:0b5ae82899ae81b60728d0ef903d41ea52e28cba3e5c68dfa03023e98b2e8cf5
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

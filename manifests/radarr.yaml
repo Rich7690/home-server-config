@@ -28,7 +28,7 @@ spec:
             - configMapRef:
                 name: common-vars
                 optional: false
-          image: lscr.io/linuxserver/radarr:4.1.0
+          image: lscr.io/linuxserver/radarr:4.1.0@sha256:257ea6aa43069f414d3fd7f37eced2b903ef4eb2b2c4ee819676b8fe183129eb
           imagePullPolicy: IfNotPresent
           env:
             - name: "DOCKER_MODS"
