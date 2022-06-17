@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  range-global: 192.168.5.15-192.168.5.49
+kind: ConfigMap
+metadata:
+  name: kubevip
+  namespace: kube-system
