@@ -21,7 +21,7 @@ spec:
           requests:
             cpu: 100m
             memory: 128Mi
-         runAsUser: 998
+         runAsUser: 65534
   destination:
     server: "https://kubernetes.default.svc"
     namespace: default

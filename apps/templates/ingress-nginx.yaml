@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.1.0
+    helm:
+      releaseName: ingress-nginx
+      values: |
+          controller:
+            addHeaders:
+              X-Frame-Options: SAMEORIGIN
+            electionID: ingress-controller-leader
+            image:
+              runAsUser: "101"
+            kind: Deployment
+            metrics:
+              enabled: true
+              service:
+                annotations:
+                  prometheus.io/port: "10254"
+                  prometheus.io/scrape: "true"
+            replicaCount: 1
+            resources:
+              limits:
+                cpu: 4
+                memory: 2G
+              requests:
+                cpu: 100m
+                memory: 200Mi
+            service:
+              externalTrafficPolicy: Local
+              loadBalancerIP: 192.168.5.10
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
