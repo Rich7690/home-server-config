@@ -24,7 +24,7 @@ spec:
         - env:
             - name: GIN_MODE
               value: release
-          image: ghcr.io/analogj/scrutiny:v0.4.12-omnibus
+          image: ghcr.io/analogj/scrutiny:v0.4.13-omnibus
           imagePullPolicy: IfNotPresent
           name: scrutiny
           ports:
