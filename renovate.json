@@ -7,6 +7,11 @@
       "\\.yaml$"
     ]
   },
+  "helm-values": {
+    "fileMatch": [
+      "\\.yaml$"
+    ]
+  },
   "packageRules": [
     {
       "packagePatterns": [
