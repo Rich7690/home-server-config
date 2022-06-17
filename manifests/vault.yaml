@@ -14,7 +14,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: vault.$PLACEHOLDER_DOMAIN
+    - host: "vault.${vault:secret/data/deploy/domain#domain_name}"
       http:
         paths:
           - backend:
@@ -26,6 +26,6 @@ spec:
             pathType: ImplementationSpecific
   tls:
     - hosts:
-        - $PLACEHOLDER_DOMAIN
-        - "*.$PLACEHOLDER_DOMAIN"
+        - "${vault:secret/data/deploy/domain#domain_name}"
+        - "*.${vault:secret/data/deploy/domain#domain_name}"
       secretName: prod-cert
