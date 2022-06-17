@@ -5,44 +5,6 @@ provider "helm" {
   }
 }
 
-
-resource "helm_release" "vault" {
-  name        = "vault"
-  chart       = "vault"
-  repository  = "https://kubernetes-charts.banzaicloud.com"
-  max_history = 3
-  version = "1.15.5"
-
-  set {
-    name  = "image.tag"
-    value = "1.10.3"
-  }
-
-  set {
-    name  = "persistence.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "persistence.hostPath"
-    value = "/work/storage/configs/vault"
-  }
-
-}
-
-resource "helm_release" "vault-secrets-webhook" {
-  name        = "vault-secrets-webhook"
-  chart       = "vault-secrets-webhook"
-  repository  = "https://kubernetes-charts.banzaicloud.com"
-  max_history = 3
-  version = "1.15.11"
-
-  set {
-    name  = "env.VAULT_IMAGE"
-    value = "vault:1.10.3"
-  }
-}
-
 resource "kubernetes_ingress_v1" "vault_ingress" {
   metadata {
     name = "vault-ingress"
