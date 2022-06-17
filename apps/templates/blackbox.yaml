@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-blackbox-exporter
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: prometheus-blackbox-exporter
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 5.3.2
+    helm:
+      releaseName: prometheus-blackbox-exporter
+      values: |
+         persistentVolume:
+          enabled: false
+         resources:
+          limits:
+            cpu: "4"
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+         runAsUser: 998
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
