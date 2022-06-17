@@ -116,3 +116,25 @@ spec:
             path: /work/storage/configs/radarr
             type: Directory
           name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: radarr
+  name: radarr
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 7878
+    protocol: TCP
+    targetPort: 7878
+  selector:
+    app: radarr
+  sessionAffinity: None
+  type: ClusterIP

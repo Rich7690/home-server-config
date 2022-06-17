@@ -111,3 +111,25 @@ spec:
             path: /work/storage/configs/sonarr
             type: Directory
           name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sonarr
+  name: sonarr
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - name: http
+      port: 8989
+      protocol: TCP
+      targetPort: 8989
+  selector:
+    app: sonarr
+  sessionAffinity: None
+  type: ClusterIP
