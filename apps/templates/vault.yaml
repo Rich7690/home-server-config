@@ -14,7 +14,7 @@ spec:
       values: |
          image:
            tag: 1.10.3
-         persistance:
+         persistence:
            enabled: false
            hostPath: /work/storage/configs/vault
   destination:
