@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sonarr
+  name: sonarr
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: sonarr
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: common-vars
+                optional: false
+          image: lscr.io/linuxserver/sonarr
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - CHOWN
+                - SETGID
+                - SETUID
+                #- NET_RAW
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          name: sonarr
+          ports:
+            - containerPort: 8989
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8989
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: "4"
+              memory: 1G
+            requests:
+              cpu: 500m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /config
+              mountPropagation: None
+              name: config
+            - mountPath: /media
+              mountPropagation: None
+              name: media
+            - mountPath: /torrents
+              mountPropagation: None
+              name: torrents
+            - mountPath: /etc/localtime
+              mountPropagation: None
+              name: timezone
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      nodeSelector:
+        kubernetes.io/hostname: debian-storage
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      shareProcessNamespace: false
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - hostPath:
+            path: /etc/localtime
+            type: File
+          name: timezone
+        - hostPath:
+            path: /media
+            type: Directory
+          name: media
+        - hostPath:
+            path: /media/Torrents
+            type: Directory
+          name: torrents
+        - hostPath:
+            path: /work/storage/configs/sonarr
+            type: Directory
+          name: config

@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scrutiny
+  name: scrutiny
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: scrutiny
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: scrutiny
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - env:
+            - name: GIN_MODE
+              value: release
+          image: ghcr.io/analogj/scrutiny:v0.4.12-omnibus
+          imagePullPolicy: IfNotPresent
+          name: scrutiny
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 8086
+              name: influxdb
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "4"
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - SYS_RAWIO
+                - SYS_ADMIN
+            privileged: true
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /opt/scrutiny/config
+              mountPropagation: None
+              name: scrutiny
+              subPath: config
+            - mountPath: /opt/scrutiny/influxdb
+              mountPropagation: None
+              name: scrutiny
+              subPath: data
+            - mountPath: /dev
+              mountPropagation: None
+              name: dev
+            - mountPath: /run/udev
+              mountPropagation: None
+              name: udev
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      shareProcessNamespace: false
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - hostPath:
+            path: /run/udev
+            type: ""
+          name: udev
+        - hostPath:
+            path: /dev
+            type: ""
+          name: dev
+        - hostPath:
+            path: /work/storage/configs/scrutiny
+            type: Directory
+          name: scrutiny
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: scrutiny
+  name: scrutiny
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: scrutiny
+  sessionAffinity: None
+  type: ClusterIP
