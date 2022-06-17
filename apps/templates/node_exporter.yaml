@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-node-exporter
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: prometheus-node-exporter
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 3.0.0
+    helm:
+      releaseName: prometheus-node-exporter
+      values: |
+         podAnnotations:
+          prometheus.io/scrape: "true"
+         resources:
+          limits:
+            cpu: 4
+            memory: 100Mi
+          requests:
+            cpu: 500m
+            memory: 50Mi
+         service:
+          annotations:
+            prometheus.io/scrape: "false"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
