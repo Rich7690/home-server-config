@@ -28,7 +28,7 @@ spec:
             - configMapRef:
                 name: common-vars
                 optional: false
-          image: lscr.io/linuxserver/sonarr
+          image: lscr.io/linuxserver/sonarr:3.0.8
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -41,7 +41,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: false
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 60
