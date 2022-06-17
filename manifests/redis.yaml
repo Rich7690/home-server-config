@@ -28,7 +28,7 @@ spec:
             - redis-server
             - --appendonly
             - "yes"
-          image: redis:6-alpine
+          image: redis:7-alpine
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
