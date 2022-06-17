@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: vault
+    repoURL: https://kubernetes-charts.banzaicloud.com
+    targetRevision: 1.15.5
+    helm:
+      releaseName: vault
+      values: |
+         image:
+           tag: 1.10.3
+         persistance:
+           enabled: false
+           hostPath: /work/storage/configs/vault
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
