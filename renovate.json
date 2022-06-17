@@ -5,6 +5,9 @@
     ":disableRateLimiting",
     ":dependencyDashboard"
   ],
+  "docker": {
+    "pinDigests": true
+  },
   "kubernetes": {
     "fileMatch": [
       "\\.yaml$"
