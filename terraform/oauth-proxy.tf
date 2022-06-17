@@ -4,10 +4,6 @@ resource "kubernetes_service_account_v1" "oauth_proxy" {
   }
 }
 
-resource "kubernetes_manifest" "deployment_oauth_proxy" {
-  manifest = yamldecode(file("./manifests/oauth-proxy.yaml"))
-}
-
 
 resource "kubernetes_secret_v1" "oauth_proxy" {
   metadata {
