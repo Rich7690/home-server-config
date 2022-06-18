@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k10
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: k10
+    repoURL: https://charts.kasten.io/
+    targetRevision: 5.0.1
+    helm:
+      releaseName: k10
+      values: |
+      eula:
+        accept: true
+        company: rich7690
+        email: rich7690@@users.noreply.github.com
+      injectKanisterSidecar:
+        enabled: true
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: default
+      auth:
+        tokenAuth:
+          enabled: true
+      prometheus:
+        server:
+          enabled: false
+      grafana:
+        enabled: false
+          
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
