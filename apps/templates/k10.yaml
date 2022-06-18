@@ -12,6 +12,8 @@ spec:
     helm:
       releaseName: k10
       values: |
+        externalGateway:
+          create: true
         eula:
             accept: true
             company: rich7690
