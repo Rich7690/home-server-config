@@ -12,23 +12,23 @@ spec:
     helm:
       releaseName: k10
       values: |
-      eula:
-        accept: true
-        company: rich7690
-        email: rich7690@@users.noreply.github.com
-      injectKanisterSidecar:
-        enabled: true
-        namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: default
-      auth:
-        tokenAuth:
-          enabled: true
-      prometheus:
-        server:
-          enabled: false
-      grafana:
-        enabled: false
+        eula:
+            accept: true
+            company: rich7690
+            email: rich7690@@users.noreply.github.com
+        injectKanisterSidecar:
+            enabled: true
+            namespaceSelector:
+            matchLabels:
+                kubernetes.io/metadata.name: default
+        auth:
+            tokenAuth:
+            enabled: true
+        prometheus:
+            server:
+            enabled: false
+        grafana:
+            enabled: false
           
   destination:
     server: "https://kubernetes.default.svc"
