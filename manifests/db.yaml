@@ -32,7 +32,7 @@ spec:
             - secretRef:
                 name: db-secrets
                 optional: false
-          image: linuxserver/mariadb:alpine-version-10.5.16-r0
+          image: linuxserver/mariadb:alpine-version-10.5.16-r0@sha256:cf26956bfbdeb5e45cef5a65519c5c589e22d913762950dfe29d6cf11ea7969a
           imagePullPolicy: Always
           livenessProbe:
             exec:
