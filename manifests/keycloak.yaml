@@ -8,7 +8,7 @@ metadata:
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app: keycloak
@@ -80,3 +80,14 @@ spec:
       securityContext: {}
       shareProcessNamespace: false
       terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+data:
+  DB_ADDR: db
+  DB_PORT: "3306"
+  DB_VENDOR: mariadb
+  PROXY_ADDRESS_FORWARDING: "true"
+kind: ConfigMap
+metadata:
+  name: keycloak
+  namespace: default
