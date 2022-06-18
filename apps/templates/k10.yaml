@@ -23,10 +23,10 @@ spec:
                 kubernetes.io/metadata.name: default
         auth:
             tokenAuth:
-            enabled: true
+              enabled: true
         prometheus:
             server:
-            enabled: false
+              enabled: false
         grafana:
             enabled: false
           
