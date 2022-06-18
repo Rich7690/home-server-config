@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prowlarr
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: prowlarr
+    repoURL: https://k8s-at-home.com/charts
+    targetRevision: 4.4.2
+    helm:
+      releaseName: prowlarr
+      values: |
+        env:
+            TZ: America/Los_Angeles
+        image:
+            tag: v0.4.0.1793
+        persistence:
+            config:
+                enabled: true
+                hostPath: /work/storage/configs/prowlarr
+                hostPathType: Directory
+                mountPath: /config
+                type: hostPath
+        resources:
+            limits:
+                cpu: 4
+                memory: 1G
+            requests:
+                cpu: 200m
+                memory: 400Mi
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
