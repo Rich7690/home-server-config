@@ -32,7 +32,7 @@ spec:
             - secretRef:
                 name: savethespot
                 optional: false
-            image: ghcr.io/rtdev7690/go-web-crawl:0.0.1
+            image: ghcr.io/rtdev7690/go-web-crawl:0.0.1@sha256:685fbce5352c2aa750776d0093dc70c9c7d6680a66fd7bd133b42f78aabe4e93
             imagePullPolicy: IfNotPresent
             name: savethespot
             resources:

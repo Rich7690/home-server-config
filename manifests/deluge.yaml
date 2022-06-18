@@ -31,7 +31,7 @@ spec:
             - configMapRef:
                 name: deluge
                 optional: false
-          image: binhex/arch-delugevpn:2.0.5-1-04
+          image: binhex/arch-delugevpn:2.0.5-1-04@sha256:a16c883e390ad9c5ba32ec42ec2346fefb9785e09cbe7eef308282012755526c
           imagePullPolicy: IfNotPresent
           name: deluge
           ports:
