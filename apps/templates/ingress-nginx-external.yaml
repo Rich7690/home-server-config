@@ -6,7 +6,7 @@ metadata:
 spec:
   project: remote-apps
   source:
-    chart: ingress-nginx-external
+    chart: ingress-nginx
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.1.0
     helm:
