@@ -21,6 +21,9 @@ resource "kubernetes_ingress_v1" "vm" {
       "app" = "vm"
     }
     annotations = {
+      "nginx.ingress.kubernetes.io/proxy-body-size"    = "0"
+      "nginx.ingress.kubernetes.io/proxy-read-timeout" = "600"
+      "nginx.ingress.kubernetes.io/proxy-send-timeout" = "600"
     }
   }
   spec {
