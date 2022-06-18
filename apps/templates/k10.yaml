@@ -21,8 +21,8 @@ spec:
         injectKanisterSidecar:
             enabled: true
             namespaceSelector:
-            matchLabels:
-                kubernetes.io/metadata.name: default
+                matchLabels:
+                  kubernetes.io/metadata.name: default
         auth:
             tokenAuth:
               enabled: true
