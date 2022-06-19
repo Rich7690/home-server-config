@@ -12,6 +12,7 @@ spec:
     helm:
       releaseName: k10
       values: |
+        kanisterPodCustomLabels : "app=backup-pod"
         externalGateway:
           create: true
         eula:
