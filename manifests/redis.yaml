@@ -133,7 +133,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: local-path
+  storageClassName: generic
   volumeMode: Filesystem
   volumeName: redis
 ---
@@ -149,5 +149,7 @@ spec:
   capacity:
     storage: 5G
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-path
+  storageClassName: generic
   volumeMode: Filesystem
+  local:
+    path: /work/storage/configs/redis
