@@ -132,7 +132,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 5G
   storageClassName: generic
   volumeMode: Filesystem
   volumeName: redis
