@@ -129,11 +129,13 @@ metadata:
   namespace: default
 spec:
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
-      storage: 5G
+      storage: 5Gi
   storageClassName: local-path
+  volumeMode: Filesystem
+  volumeName: redis
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -149,20 +151,3 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-path
   volumeMode: Filesystem
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app: redis
-  name: redis
-  namespace: default
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: local-path
-  volumeMode: Filesystem
-  volumeName: redis
