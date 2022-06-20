@@ -22,7 +22,7 @@ spec:
       labels:
         app: radarr
     spec:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       containers:
         - envFrom:
             - configMapRef:

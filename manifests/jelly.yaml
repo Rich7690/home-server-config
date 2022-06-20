@@ -19,7 +19,7 @@ spec:
       labels:
         app: jelly
     spec:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       containers:
         - env:
             - name: UMASK

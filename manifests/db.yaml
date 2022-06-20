@@ -19,7 +19,7 @@ spec:
       labels:
         app: db
     spec:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       containers:
         - env:
             - name: PUID

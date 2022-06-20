@@ -22,7 +22,7 @@ spec:
       labels:
         app: redis
     spec:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       containers:
         - command:
             - redis-server
