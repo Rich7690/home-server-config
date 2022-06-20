@@ -1,0 +1,39 @@
+apiVersion: v1
+data:
+  excludes.txt: |
+    **pkg**
+    *.log
+    /storage/Media
+    /storage/configs/monero/blockchain
+    **/.cache/**
+    **/Logs/**
+    **/Cache/**
+    **/tmp/**
+    **/logs/**
+    **/log/**
+    **/cache/**
+    **/metadata/**
+    /storage/ServerBackup
+    **/node_modules/**
+    /storage/configs/prom-data
+    /storage/volume/pvc-*-vm-victoria-metrics-single-server-0
+    /storage/volume/pvc-*docker-registry
+    /storage/Torrents
+    **.pulumi**
+    /storage/dev/kubernetes
+    /storage/media-cache
+    /storage/media-remote
+    **docker-registry**
+    /storage/configs/jelly/transcodes
+    /storage/configs/jelly/People
+    /storage/configs/radarr/MediaCover
+    **.terraform**
+    */dist*
+    **/_test/**
+    **/build/**
+    *.ts
+    /storage/configs/nextcloud/data/updater*
+kind: ConfigMap
+metadata:
+  name: excludes-file
+  namespace: cron

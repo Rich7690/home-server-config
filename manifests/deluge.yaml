@@ -21,6 +21,9 @@ spec:
     metadata:
       labels:
         app: deluge
+      annotations:
+        vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+        vault.security.banzaicloud.io/vault-env-from-path: "secret/data/deploy/deluge"
     spec:
       automountServiceAccountToken: false
       containers:
@@ -101,3 +104,19 @@ spec:
             path: /media
             type: Directory
           name: media
+---
+apiVersion: v1
+data:
+  DEBUG: "false"
+  ENABLE_PRIVOXY: "yes"
+  LAN_NETWORK: 192.168.0.0/16,172.16.0.0/12,10.0.0.0/8
+  NAME_SERVERS: 193.138.218.74
+  STRICT_PORT_FORWARD: "no"
+  UMASK: "022"
+  UMASK_SET: "022"
+  VPN_ENABLED: "yes"
+  VPN_PROV: custom
+kind: ConfigMap
+metadata:
+  name: deluge
+  namespace: default
