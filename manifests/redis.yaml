@@ -7,7 +7,7 @@ metadata:
   namespace: default
 spec:
   progressDeadlineSeconds: 600
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -88,7 +88,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: redis-2
+            claimName: redis
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -125,7 +125,7 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     app: redis
-  name: redis-2
+  name: redis
   namespace: default
 spec:
   accessModes:
@@ -134,3 +134,35 @@ spec:
     requests:
       storage: 5G
   storageClassName: local-path
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    app: redis
+  name: redis
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 5G
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: redis
+  name: redis
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-path
+  volumeMode: Filesystem
+  volumeName: redis
