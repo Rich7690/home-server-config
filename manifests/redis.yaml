@@ -151,5 +151,6 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: generic
   volumeMode: Filesystem
-  local:
+  hostPath:
+    type: Directory
     path: /work/storage/configs/redis
