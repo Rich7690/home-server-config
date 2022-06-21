@@ -27,7 +27,7 @@ spec:
         - env:
             - name: GF_PATHS_CONFIG
               value: /var/lib/grafana/grafana.ini
-          image: grafana/grafana:9.0.0@sha256:9ca04d75fd1ec499aeed2d553e7eb9ab8da4947d4ec3de61a72ff15333324557
+          image: grafana/grafana:9.0.1@sha256:a738d07447840fb8ece043fc54438a8d75922013f8d922d856fadd29f9e06c2e
           imagePullPolicy: IfNotPresent
           name: grafana
           ports:
