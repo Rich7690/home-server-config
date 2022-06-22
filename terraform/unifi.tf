@@ -1,35 +1,3 @@
-resource "helm_release" "unifi" {
-  name        = "unifi"
-  chart       = "unifi"
-  repository  = "https://k8s-at-home.com/charts"
-  max_history = 3
-
-  set {
-    name  = "env.TZ"
-    value = "America/Los_Angeles"
-  }
-
-  set {
-    name  = "persistence.data.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "persistence.data.accessMode"
-    value = "ReadWriteOnce"
-  }
-
-  set {
-    name  = "persistence.data.size"
-    value = "5Gi"
-  }
-
-  set {
-    name  = "service.main.type"
-    value = "LoadBalancer"
-  }
-}
-
 resource "kubernetes_ingress_v1" "unifi" {
   metadata {
     name = "unifi"

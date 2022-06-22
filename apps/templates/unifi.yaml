@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: unifi
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: unifi
+    repoURL: https://k8s-at-home.com/charts
+    targetRevision: 4.10.1
+    helm:
+      releaseName: unifi
+      values: |
+         env:
+            TZ: America/Los_Angeles
+        persistence:
+            data:
+                accessMode: ReadWriteOnce
+                enabled: true
+                size: 5Gi
+        service:
+            main:
+                type: LoadBalancer
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    

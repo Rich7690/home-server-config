@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vaultwarden
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: vaultwarden
+    repoURL: https://k8s-at-home.com/charts
+    targetRevision: 4.2.3
+    helm:
+      releaseName: vaultwarden
+      values: |
+        podAnnotations:
+            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+        env:
+          DATA_FOLDER: /work/storage/configs/vaultwarden
+          DOMAIN: vault:secret/data/deploy/domain#vaultwarden_domain
+          GROUPID: 997
+          SIGNUPS_ALLOWED: false
+          TZ: America/Los_Angeles
+          USERID: 998
+        persistence:
+          config:
+            enabled: true
+            hostPath: /work/storage/configs/vaultwarden
+            type: hostPath
+        resources:
+          limits:
+            cpu: 4
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 30Mi
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+    
