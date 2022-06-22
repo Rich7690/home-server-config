@@ -12,7 +12,7 @@ spec:
     helm:
       releaseName: unifi
       values: |
-         env:
+        env:
             TZ: America/Los_Angeles
         persistence:
             data:
