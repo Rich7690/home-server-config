@@ -1,4 +1,10 @@
-kind: Deployment
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: exportarr
+  namespace: default
+---
+kind: Deployment #TODO: probably should just make this a sidecar on radarr/sonarr
 apiVersion: apps/v1
 metadata:
   name: radarr-exporter
@@ -22,6 +28,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "monitoring"
     spec:
+      serviceAccountName: exportarr
       containers:
         - name: radarr-exporter
           image: ghcr.io/onedr0p/exportarr:v1.0.0@sha256:7a795d30fe719f2b4eec8911b4efa8886018825daeafaa4d9165db726e31e689
@@ -34,10 +41,7 @@ spec:
             - name: URL
               value: "http://radarr.default.svc.cluster.local:7878/radarr"
             - name: APIKEY
-              valueFrom:
-                secretKeyRef:
-                  name: exportarr
-                  key: radarr-api-key
+              value: "vault:secret/data/deploy/radarr#radarr-api-key"
           ports:
             - name: monitoring
               containerPort: 9707
