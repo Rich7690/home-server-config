@@ -9,6 +9,10 @@ apiVersion: apps/v1
 metadata:
   name: radarr-exporter
   namespace: default
+  annotations:
+    vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
+    vault.security.banzaicloud.io/vault-agent: "false"
+    vault.security.banzaicloud.io/vault-role: "exportarr"
   labels:
     app.kubernetes.io/name: radarr-exporter
     app.kubernetes.io/instance: radarr-exporter

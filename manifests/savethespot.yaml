@@ -1,8 +1,12 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: savethespot
+  namespace: cron
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  annotations:
-    diun.enable: "false"
   labels:
     app: savethespot
   name: savethespot
@@ -12,8 +16,6 @@ spec:
   failedJobsHistoryLimit: 1
   jobTemplate:
     metadata:
-      annotations:
-        diun.enable: "false"
       labels:
         app: savethespot
     spec:
@@ -25,25 +27,25 @@ spec:
         metadata:
           labels:
             app: savethespot
+          annotations:
+            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+            vault.security.banzaicloud.io/vault-env-from-path: "secret/data/deploy/savethespot"
         spec:
+          serviceAccountName: savethespot
           automountServiceAccountToken: true
           containers:
-          - envFrom:
-            - secretRef:
-                name: savethespot
-                optional: false
-            image: ghcr.io/rtdev7690/go-web-crawl:0.0.1@sha256:685fbce5352c2aa750776d0093dc70c9c7d6680a66fd7bd133b42f78aabe4e93
-            imagePullPolicy: IfNotPresent
-            name: savethespot
-            resources:
-              limits:
-                cpu: "4"
-                memory: 1G
-              requests:
-                cpu: 200m
-                memory: 512Mi
-            terminationMessagePath: /dev/termination-log
-            terminationMessagePolicy: File
+            - image: ghcr.io/rtdev7690/go-web-crawl:0.0.1@sha256:685fbce5352c2aa750776d0093dc70c9c7d6680a66fd7bd133b42f78aabe4e93
+              imagePullPolicy: IfNotPresent
+              name: savethespot
+              resources:
+                limits:
+                  cpu: "4"
+                  memory: 1G
+                requests:
+                  cpu: 200m
+                  memory: 512Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
           dnsPolicy: ClusterFirst
           enableServiceLinks: true
           restartPolicy: Never
