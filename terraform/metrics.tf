@@ -2,7 +2,7 @@ resource "helm_release" "vm" {
   name        = "vm"
   chart       = "victoria-metrics-single"
   repository  = "https://victoriametrics.github.io/helm-charts/"
-  version     = "0.8.30"
+  version     = "0.8.31"
   max_history = 3
 
   set {
