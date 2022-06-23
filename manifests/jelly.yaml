@@ -45,7 +45,7 @@ spec:
             #runAsGroup: 65534 TODO: run these as non-root someday, but linux server containers run supervisor processes as root
             #runAsNonRoot: true
             #runAsUser: 65534
-          image: lscr.io/linuxserver/jellyfin:10.8.0@sha256:82dac3dcbd22876f1444f3be2b3283d9569f3c69e9dd70196b1b84f253f5189e
+          image: lscr.io/linuxserver/jellyfin:10.8.0@sha256:05328ff1754948dd1b0abeed9b0fbd19000e9fd5e18d8b9d191f71bafde576e9
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
