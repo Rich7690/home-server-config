@@ -24,19 +24,16 @@ spec:
     spec:
       automountServiceAccountToken: true
       containers:
-        - env:
-            - name: PUID
-              value: "0"
-            - name: PGID
-              value: "0"
-            - name: TZ
-              value: America/Los_Angeles
+        - securityContext:
+            runAsUser: 0 # TODO: run as non-root
+            runAsGroup: 0
+            runAsNonRoot: false
           image: mariadb:10.5.16@sha256:5b6b917fd647ee1f288216e78e3065d6e7cf37b2312a7087399a757619870b29
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
               command:
-                - ash
+                - /bin/bash
                 - -c
                 - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
             failureThreshold: 3
@@ -52,7 +49,7 @@ spec:
           readinessProbe:
             exec:
               command:
-                - ash
+                - /bin/bash
                 - -c
                 - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
             failureThreshold: 3
@@ -70,7 +67,7 @@ spec:
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-            - mountPath: /var/lib/mysql
+            - mountPath: /var/lib/mysql/
               mountPropagation: None
               name: config
       dnsPolicy: ClusterFirst
@@ -84,6 +81,6 @@ spec:
       terminationGracePeriodSeconds: 30
       volumes:
         - hostPath:
-            path: /work/storage/configs/mysql
+            path: /work/storage/configs/mysql/databases
             type: Directory
           name: config
