@@ -30,7 +30,7 @@ spec:
         persistence:
             torrents:
                 enabled: true
-                hostPath: /torrents
+                hostPath: /media/Torrents
                 hostPathType: Directory
                 mountPath: /torrents
                 type: hostPath
