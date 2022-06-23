@@ -18,7 +18,7 @@ spec:
               drop:
                 - ALL
             privileged: false
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
         podSecurityContext:
             runAsUser: 998
             runAsGroup: 997
