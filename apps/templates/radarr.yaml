@@ -12,6 +12,13 @@ spec:
     helm:
       releaseName: radarr
       values: |
+        securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
         podSecurityContext:
             runAsUser: 998
             runAsGroup: 997
@@ -37,6 +44,7 @@ spec:
                 enabled: true
                 hostPath: /work/storage/configs/radarr
                 hostPathType: Directory
+                mountPath: /config
                 type: hostPath
         resources:
             limits:
