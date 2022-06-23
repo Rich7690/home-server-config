@@ -21,31 +21,22 @@ spec:
     spec:
       automountServiceAccountToken: true
       containers:
-        - env:
-            - name: UMASK
-              value: "022"
-            - name: S6_READ_ONLY_ROOT
-              value: "1"
-          envFrom:
-            - configMapRef:
-                name: common-vars
-                optional: false
-          securityContext:
+        - securityContext:
             allowPrivilegeEscalation: false
             capabilities:
-              add:
-                - CHOWN
-                - SETGID
-                - SETUID
-                #- NET_RAW
               drop:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: false
-            #runAsGroup: 65534 TODO: run these as non-root someday, but linux server containers run supervisor processes as root
-            #runAsNonRoot: true
-            #runAsUser: 65534
-          image: lscr.io/linuxserver/jellyfin:10.8.0@sha256:82dac3dcbd22876f1444f3be2b3283d9569f3c69e9dd70196b1b84f253f5189e
+            runAsGroup: 997
+            runAsNonRoot: true
+            runAsUser: 998
+          env:
+            - name: JELLYFIN_CONFIG_DIR
+              value: /config
+            - name: JELLYFIN_DATA_DIR
+              value: /config/data
+          image: jellyfin/jellyfin:10.8.0@sha256:7117cbe063eed440a7c4085ccc27f15990b298efe4d83fcd5c939771ae8af793
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -88,9 +79,9 @@ spec:
             - mountPath: /media
               mountPropagation: None
               name: media
-            - mountPath: /media-remote
+            - mountPath: /transcode
+              name: transcode
               mountPropagation: None
-              name: media-remote
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       nodeSelector:
@@ -110,6 +101,6 @@ spec:
             type: Directory
           name: media
         - hostPath:
-            path: /work/storage/media-remote
+            path: /tmp/transcode
             type: Directory
-          name: media-remote
+          name: transcode
