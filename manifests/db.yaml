@@ -28,7 +28,7 @@ spec:
             runAsUser: 0 # TODO: run as non-root
             runAsGroup: 0
             runAsNonRoot: false
-          image: mariadb:10.5.16@sha256:5b6b917fd647ee1f288216e78e3065d6e7cf37b2312a7087399a757619870b29
+          image: mariadb:10.5.16@sha256:ca53a7cd054a66a34377737686753f1c9f9d797c18acc4e6e15ba997faa8b459
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
