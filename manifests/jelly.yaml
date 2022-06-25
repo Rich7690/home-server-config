@@ -19,7 +19,7 @@ spec:
       labels:
         app: jelly
     spec:
-      automountServiceAccountToken: true
+      automountServiceAccountToken: true 
       containers:
         - securityContext:
             allowPrivilegeEscalation: false
@@ -88,7 +88,9 @@ spec:
         kubernetes.io/hostname: debian-storage
       restartPolicy: Always
       schedulerName: default-scheduler
-      securityContext: {}
+      securityContext:
+        fsGroup: 997      
+        fsGroupChangePolicy: "OnRootMismatch"
       shareProcessNamespace: false
       terminationGracePeriodSeconds: 30
       volumes:
@@ -102,5 +104,5 @@ spec:
           name: media
         - hostPath:
             path: /tmp/transcode
-            type: Directory
+            type: DirectoryOrCreate
           name: transcode

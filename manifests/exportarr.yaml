@@ -3,6 +3,37 @@ apiVersion: v1
 metadata:
   name: exportarr
   namespace: default
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: exportarr-radarr
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: radarr-exporter
+      app.kubernetes.io/instance: radarr-exporter
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress: []
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: radarr
+      ports:
+        - port: 7878
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+
 ---
 kind: Deployment #TODO: probably should just make this a sidecar on radarr/sonarr
 apiVersion: apps/v1

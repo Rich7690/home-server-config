@@ -60,7 +60,7 @@ spec:
         - --leader-elect-resource-name=kube-vip-cloud-controller
         image: ghcr.io/kube-vip/kube-vip-cloud-provider:v0.0.2
         name: kube-vip-cloud-provider
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         resources: {}
         securityContext:
             runAsUser: 65532

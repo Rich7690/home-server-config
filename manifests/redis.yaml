@@ -29,7 +29,7 @@ spec:
             - --appendonly
             - "yes"
           image: redis:7-alpine@sha256:5916c280afae05baf0dc9a0cc82fa8e51477bdbfc72f60a5c14fd2b7735bcf07
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
             initialDelaySeconds: 5
@@ -129,7 +129,7 @@ metadata:
   namespace: default
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5G
@@ -145,7 +145,7 @@ metadata:
   name: redis
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   capacity:
     storage: 5G
   persistentVolumeReclaimPolicy: Retain

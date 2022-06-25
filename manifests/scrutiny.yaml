@@ -42,7 +42,7 @@ spec:
               cpu: 100m
               memory: 64Mi
           securityContext:
-            allowPrivilegeEscalation: true
+            allowPrivilegeEscalation: true # defaults true because of privileged and SYS_ADMIN
             capabilities:
               add:
                 - SYS_RAWIO
