@@ -33,6 +33,7 @@ spec:
           livenessProbe:
             exec:
               command:
+                - /vault/vault-env
                 - /bin/bash
                 - -c
                 - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
@@ -49,6 +50,7 @@ spec:
           readinessProbe:
             exec:
               command:
+                - /vault/vault-env
                 - /bin/bash
                 - -c
                 - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
