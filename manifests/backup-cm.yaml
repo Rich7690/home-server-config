@@ -4,6 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: restic-backups
   name: restic-backups
+  namespace: cron
 data:
   config.hcl: |
     vault {
