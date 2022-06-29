@@ -38,7 +38,7 @@ spec:
               env:
                 - name: TZ
                   value: America/Los_Angeles
-              image: ghcr.io/rtdev7690/restic-backup-docker:latest@sha256:31d2c60559c45975f492fa5f49599ec54feaf366ef755436afcacd129ccfffdb
+              image: ghcr.io/rtdev7690/restic-backup-docker:latest@sha256:9297d206ebf3a3fde0e78488a89b97c7c6f61b0d9124f83fc7235ce4e7e0bf24
               imagePullPolicy: IfNotPresent
               name: restic
               resources:
@@ -158,7 +158,7 @@ spec:
               env:
                 - name: TZ
                   value: America/Los_Angeles
-              image: ghcr.io/rtdev7690/restic-backup-docker:latest@sha256:31d2c60559c45975f492fa5f49599ec54feaf366ef755436afcacd129ccfffdb
+              image: ghcr.io/rtdev7690/restic-backup-docker:latest@sha256:9297d206ebf3a3fde0e78488a89b97c7c6f61b0d9124f83fc7235ce4e7e0bf24
               imagePullPolicy: IfNotPresent
               name: restic
               resources:
@@ -264,7 +264,7 @@ spec:
               env:
                 - name: TZ
                   value: America/Los_Angeles
-              image: ghcr.io/rtdev7690/restic-backup-docker:latest@sha256:31d2c60559c45975f492fa5f49599ec54feaf366ef755436afcacd129ccfffdb
+              image: ghcr.io/rtdev7690/restic-backup-docker:latest@sha256:9297d206ebf3a3fde0e78488a89b97c7c6f61b0d9124f83fc7235ce4e7e0bf24
               imagePullPolicy: IfNotPresent
               name: restic
               resources:
