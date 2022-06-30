@@ -18,7 +18,7 @@ spec:
       operator: "Exists"
   serviceAccountName: system-upgrade
   upgrade:
-    image: rancher/k3s-upgrade@sha256:70a238fdf8da99b99fcdb835f8162c9176e8078c170f5d6f349d3b38c3bfed7b
+    image: rancher/k3s-upgrade:v1.23.8-k3s1@sha256:6ff3729370e6bc75cb632b958eb2cfb399d3a3938f10e4db92c9bd46a9c9f01e
   channel: https://update.k3s.io/v1-release/channels/v1.23
 ---
 # Agent plan
@@ -38,8 +38,8 @@ spec:
     args:
       - prepare
       - server-plan
-    image: rancher/k3s-upgrade@sha256:70a238fdf8da99b99fcdb835f8162c9176e8078c170f5d6f349d3b38c3bfed7b
+    image: rancher/k3s-upgrade:v1.23.8-k3s1@sha256:6ff3729370e6bc75cb632b958eb2cfb399d3a3938f10e4db92c9bd46a9c9f01e
   serviceAccountName: system-upgrade
   upgrade:
-    image: rancher/k3s-upgrade@sha256:70a238fdf8da99b99fcdb835f8162c9176e8078c170f5d6f349d3b38c3bfed7b
+    image: rancher/k3s-upgrade:v1.23.8-k3s1@sha256:6ff3729370e6bc75cb632b958eb2cfb399d3a3938f10e4db92c9bd46a9c9f01e
   channel: https://update.k3s.io/v1-release/channels/v1.23
