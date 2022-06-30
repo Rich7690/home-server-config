@@ -70,3 +70,48 @@ resource "kubernetes_ingress_v1" "scrutiny" {
     }
   }
 }
+
+
+resource "kubernetes_ingress_v1" "argo_CD" {
+  metadata {
+    name = "argo-cd"
+    labels = {
+      "app" = "argo-cd"
+    }
+    annotations = {
+      "nginx.ingress.kubernetes.io/whitelist-source-range" = "192.168.0.0/16,10.0.0.0/8"
+      "ingress.kubernetes.io/protocol"                     = "https"
+      "ingress.kubernetes.io/secure-backends"              = "true"
+      "nginx.ingress.kubernetes.io/backend-protocol"       = "HTTPS"
+      "nginx.ingress.kubernetes.io/rewrite-target"         = "/"
+      "nginx.ingress.kubernetes.io/cors-allow-methods"     = "PUT, GET, POST, DELETE, PATCH, OPTIONS"
+    }
+    namespace = "argocd"
+  }
+  spec {
+    ingress_class_name = "nginx"
+    tls {
+      hosts       = ["${var.domain_name}", "*.${var.domain_name}"]
+      secret_name = "prod-cert"
+    }
+    rule {
+
+      host = "argocd.${var.domain_name}"
+      http {
+        path {
+          path      = "/"
+          path_type = "ImplementationSpecific"
+          backend {
+            service {
+              name = "argocd-server"
+              port {
+                name = "http"
+              }
+            }
+
+          }
+        }
+      }
+    }
+  }
+}

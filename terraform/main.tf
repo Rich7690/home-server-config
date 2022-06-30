@@ -28,9 +28,6 @@ locals {
   combined_id = "${local.system_uid}:${local.system_gid}"
 }
 
-
-// argo cd manifest kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
 resource "kubernetes_namespace_v1" "argocd" {
   metadata {
     name = "argocd"
