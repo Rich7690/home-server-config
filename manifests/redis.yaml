@@ -106,7 +106,7 @@ spec:
               - key: app
                 operator: In
                 values:
-                  - web
+                  - renovate
         - podSelector:
             matchExpressions:
               - key: app.kubernetes.io/name

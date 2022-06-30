@@ -80,11 +80,11 @@ resource "kubernetes_ingress_v1" "argo_CD" {
     }
     annotations = {
       "nginx.ingress.kubernetes.io/whitelist-source-range" = "192.168.0.0/16,10.0.0.0/8"
-      "ingress.kubernetes.io/protocol"                     = "https"
-      "ingress.kubernetes.io/secure-backends"              = "true"
-      "nginx.ingress.kubernetes.io/backend-protocol"       = "HTTPS"
-      "nginx.ingress.kubernetes.io/rewrite-target"         = "/"
-      "nginx.ingress.kubernetes.io/cors-allow-methods"     = "PUT, GET, POST, DELETE, PATCH, OPTIONS"
+      "ingress.kubernetes.io/protocol"                 = "https"
+      "ingress.kubernetes.io/secure-backends"          = "true"
+      "nginx.ingress.kubernetes.io/backend-protocol"   = "HTTPS"
+      "nginx.ingress.kubernetes.io/rewrite-target"     = "/"
+      "nginx.ingress.kubernetes.io/cors-allow-methods" = "PUT, GET, POST, DELETE, PATCH, OPTIONS"
     }
     namespace = "argocd"
   }

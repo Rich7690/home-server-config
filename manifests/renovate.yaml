@@ -1,0 +1,135 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: github-app
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: github-app
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: github-app
+subjects:
+  - kind: ServiceAccount
+    name: github-app
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: github-app
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - patch
+      - create
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: github-app-secret-refresher
+spec:
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app: github-app-secret-refresher
+          annotations:
+            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+        spec:
+          automountServiceAccountToken: true
+          serviceAccountName: github-app
+          containers:
+            - name: main
+              # Update this to the latest available and then enable Renovate on
+              # the manifest
+              image: ghcr.io/rich7690/github-app-secret-refresher:latest@sha256:9d6ffb571bb07e65484c35bed4481aea7ea7a91074ebb41b8296a2db14207cde
+              imagePullPolicy: IfNotPresent
+              # Environment Variables
+              env:
+                - name: KUBE_COMBINED_SECRET_NAME
+                  value: RENOVATE_TOKEN
+                - name: GITHUB_APP_PRIVATE_KEY
+                  value: "vault:secret/data/deploy/renovate#private_key"
+                - name: KUBE_SECRET_NAME
+                  value: github-app
+                - name: KUBE_SECRET_NAMESPACE
+                  value: default
+                - name: TOKEN_PROCESSOR_TYPE
+                  value: KUBERNETES
+                - name: GITHUB_APP_ID
+                  value: "vault:secret/data/deploy/renovate#app_id"
+                - name: GITHUB_APP_INSTALLATION_ID
+                  value: "vault:secret/data/deploy/renovate#install_id"
+          restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate
+spec:
+  schedule: "@hourly"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app: renovate
+          annotations:
+            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+        spec:
+          automountServiceAccountToken: true
+          containers:
+            - name: renovate
+              # Update this to the latest available and then enable Renovate on
+              # the manifest
+              image: renovate/renovate:32.100.2@sha256:ff79143731ca0cbe2c92ba4cd7b4cd5899fc4256ef5ef0d9c327d26a07e2b0fc
+              imagePullPolicy: IfNotPresent
+              tty: true
+              stdin: true
+              command:
+                - "bash"
+                - "-c"
+                - "export GPG_TTY=$(tty) && echo $(tty) && renovate Rich7690/home-server-config"
+              # Environment Variables
+              env:
+                - name: LOG_LEVEL
+                  value: info
+              envFrom:
+                - secretRef:
+                    name: renovate-env
+                - secretRef:
+                    name: github-app
+          restartPolicy: Never
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: renovate-env
+type: Opaque
+stringData:
+  GITHUB_COM_TOKEN: "vault:secret/data/deploy/renovate#pat"
+  #RENOVATE_TOKEN: now populated by the first cronjob
+  RENOVATE_AUTODISCOVER: "false"
+  RENOVATE_PLATFORM: "github"
+  RENOVATE_GIT_PRIVATE_KEY: "vault:secret/data/deploy/renovate#gpg-key"
+  RENOVATE_ONBOARDING: "false"
+  RENOVATE_REDIS_URL: "redis://redis:6379"
+  RENOVATE_USERNAME: "rich7690-self-hosted-renovate[bot]"
+  RENOVATE_GIT_AUTHOR: "Rich7690 Self-Hosted Renovate <107744836+rich7690-self-hosted-renovate[bot]@users.noreply.github.com>"
