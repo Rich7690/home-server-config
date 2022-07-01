@@ -133,5 +133,5 @@ stringData:
   RENOVATE_REDIS_URL: "redis://redis:6379"
   RENOVATE_USERNAME: "rich7690-self-hosted-renovate[bot]"
   RENOVATE_GIT_AUTHOR: "Rich7690 Self-Hosted Renovate <107744836+rich7690-self-hosted-renovate[bot]@users.noreply.github.com>"
-  RENOVATE_AUTOMERGE: "true"
-  RENOVATE_AUTOMERGE_TYPE: "pr"
+  RENOVATE_PLATFORM_COMMIT: "true"
+
