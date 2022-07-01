@@ -18,6 +18,11 @@
       "\\.yaml$"
     ]
   },
+  "argocd": {
+    "fileMatch": [
+      "apps/templates/.+\\.yaml$"
+    ]
+  },
   "packageRules": [
     {
       "packagePatterns": [
