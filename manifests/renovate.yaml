@@ -37,8 +37,6 @@ spec:
               envFrom:
                 - secretRef:
                     name: renovate-env
-                - secretRef:
-                    name: github-app
           restartPolicy: Never
 ---
 apiVersion: v1
