@@ -99,7 +99,7 @@ spec:
             - name: renovate
               # Update this to the latest available and then enable Renovate on
               # the manifest
-              image: renovate/renovate:32.100.2@sha256:ff79143731ca0cbe2c92ba4cd7b4cd5899fc4256ef5ef0d9c327d26a07e2b0fc
+              image: renovate/renovate:32.100.2@sha256:eb2cf10178638e17be9ee089ef2f2566372a9c675de6b01a9669ec285d21cfe4
               imagePullPolicy: IfNotPresent
               tty: true
               stdin: true
