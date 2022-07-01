@@ -49,7 +49,7 @@ spec:
           containers:
             - command:
                 - /usr/local/bin/renew.sh
-              image: ghcr.io/rtdev7690/acme-resolver:latest
+              image: ghcr.io/rtdev7690/acme-resolver:latest@sha256:8ad06693d2612ba7e9910f2f732b9cc025597be6224eb52aac97a0b59397a4eb
               imagePullPolicy: IfNotPresent
               name: acme
               resources:
@@ -116,7 +116,7 @@ spec:
           containers:
             - command:
                 - /usr/local/bin/renew.sh
-              image: ghcr.io/rtdev7690/acme-resolver:latest
+              image: ghcr.io/rtdev7690/acme-resolver:latest@sha256:8ad06693d2612ba7e9910f2f732b9cc025597be6224eb52aac97a0b59397a4eb
               imagePullPolicy: IfNotPresent
               name: acme
               resources:
