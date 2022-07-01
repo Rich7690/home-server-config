@@ -79,9 +79,6 @@ spec:
             - mountPath: /media
               mountPropagation: None
               name: media
-            - mountPath: /transcode
-              name: transcode
-              mountPropagation: None
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       nodeSelector:
@@ -102,7 +99,3 @@ spec:
             path: /media
             type: Directory
           name: media
-        - hostPath:
-            path: /tmp/transcode
-            type: DirectoryOrCreate
-          name: transcode
