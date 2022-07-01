@@ -18,6 +18,8 @@
       "\\.yaml$"
     ]
   },
+  "automerge": true,
+  "automergeType": "pr",
   "packageRules": [
     {
       "packagePatterns": [
