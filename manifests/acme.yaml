@@ -4,8 +4,6 @@ kind: ServiceAccount
 metadata:
   name: acme
   namespace: cron
-secrets:
-- name: acme-token-swjnk
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -16,6 +14,140 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 subjects:
-- kind: ServiceAccount
+  - kind: ServiceAccount
+    name: acme
+    namespace: cron
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: acme
   name: acme
   namespace: cron
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        app: acme
+    spec:
+      backoffLimit: 5
+      completions: 1
+      manualSelector: false
+      parallelism: 1
+      template:
+        metadata:
+          annotations:
+            vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/acme-r
+            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+          labels:
+            app: acme
+        spec:
+          automountServiceAccountToken: true
+          containers:
+            - command:
+                - /usr/local/bin/renew.sh
+              image: ghcr.io/rtdev7690/acme-resolver:latest
+              imagePullPolicy: IfNotPresent
+              name: acme
+              resources:
+                limits:
+                  memory: 512Mi
+                requests:
+                  memory: 64Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /data
+                  mountPropagation: None
+                  name: data
+          dnsConfig:
+            searches:
+              - default.svc.cluster.local
+          dnsPolicy: ClusterFirst
+          enableServiceLinks: true
+          nodeSelector:
+            kubernetes.io/hostname: debian-storage
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          serviceAccountName: acme
+          shareProcessNamespace: false
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - hostPath:
+                path: /work/storage/configs/acme
+                type: Directory
+              name: data
+  schedule: "@daily"
+  successfulJobsHistoryLimit: 1
+  suspend: false
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: acme-udev
+  name: acme-udev
+  namespace: cron
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        app: acme-udev
+    spec:
+      backoffLimit: 5
+      completions: 1
+      manualSelector: false
+      parallelism: 1
+      template:
+        metadata:
+          annotations:
+            vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/acme-udev
+            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+          labels:
+            app: acme-udev
+        spec:
+          automountServiceAccountToken: true
+          containers:
+            - command:
+                - /usr/local/bin/renew.sh
+              image: ghcr.io/rtdev7690/acme-resolver:latest
+              imagePullPolicy: IfNotPresent
+              name: acme
+              resources:
+                limits:
+                  memory: 512Mi
+                requests:
+                  memory: 64Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /data
+                  mountPropagation: None
+                  name: data
+          dnsConfig:
+            searches:
+              - default.svc.cluster.local
+          dnsPolicy: ClusterFirst
+          enableServiceLinks: true
+          nodeSelector:
+            kubernetes.io/hostname: debian-storage
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          serviceAccountName: acme
+          shareProcessNamespace: false
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - hostPath:
+                path: /work/storage/configs/acme
+                type: Directory
+              name: data
+  schedule: "@daily"
+  successfulJobsHistoryLimit: 1
+  suspend: false
