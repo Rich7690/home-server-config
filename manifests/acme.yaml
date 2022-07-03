@@ -64,6 +64,9 @@ spec:
                   mountPropagation: None
                   name: data
           dnsConfig:
+            options:
+              - name: ndots
+                value: "3"
             searches:
               - default.svc.cluster.local
           dnsPolicy: ClusterFirst
@@ -131,6 +134,9 @@ spec:
                   mountPropagation: None
                   name: data
           dnsConfig:
+            options:
+              - name: ndots
+                value: "3"
             searches:
               - default.svc.cluster.local
           dnsPolicy: ClusterFirst
