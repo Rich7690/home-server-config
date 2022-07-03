@@ -69,7 +69,7 @@ spec:
       serviceAccountName: exportarr
       containers:
         - name: radarr-exporter
-          image: ghcr.io/onedr0p/exportarr:v1.0.0@sha256:7a795d30fe719f2b4eec8911b4efa8886018825daeafaa4d9165db726e31e689
+          image: ghcr.io/onedr0p/exportarr:v1.1.0@sha256:afd3a63b80c8a641a3bb20ff6088cb50c0501950687fbe2d57cac5282991c42a
           imagePullPolicy: IfNotPresent
           args:
             - radarr
