@@ -29,7 +29,7 @@ spec:
           automountServiceAccountToken: true
 
           containers:
-            - image: ghcr.io/rtdev7690/go-web-crawl:0.0.1@sha256:685fbce5352c2aa750776d0093dc70c9c7d6680a66fd7bd133b42f78aabe4e93
+            - image: ghcr.io/rtdev7690/go-web-crawl:0.0.2@sha256:1ab387f4ff45cd6a41b10634f1d316666ed6ac2a47d5e6dec616e6c9fa8f8727
               imagePullPolicy: IfNotPresent
               name: savethespot
               resources:
@@ -64,3 +64,4 @@ metadata:
   name: savethespot
   namespace: cron
 ---
+
