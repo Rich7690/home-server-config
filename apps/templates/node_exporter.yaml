@@ -14,6 +14,7 @@ spec:
       values: |
          podAnnotations:
           prometheus.io/scrape: "true"
+          linkerd.io/inject: enabled
          resources:
           limits:
             cpu: 4

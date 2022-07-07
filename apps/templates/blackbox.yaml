@@ -12,6 +12,8 @@ spec:
     helm:
       releaseName: prometheus-blackbox-exporter
       values: |
+         podAnnotations:
+          linkerd.io/inject: enabled
          persistentVolume:
           enabled: false
          resources:

@@ -11,6 +11,10 @@ spec:
     targetRevision: 4.7.0
     helm:
       releaseName: kube-state-metrics
+      values: |
+        podAnnotations:
+          linkerd.io/inject: enabled
+
   destination:
     server: "https://kubernetes.default.svc"
     namespace: default
