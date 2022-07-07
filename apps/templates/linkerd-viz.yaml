@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: linkerd2-viz
+  name: linkerd-viz
   namespace: argocd
 spec:
   project: remote-apps
   source:
-    chart: linkerd2-viz
+    chart: linkerd-viz
     repoURL: https://helm.linkerd.io/stable
     targetRevision: 2.11.3
     helm:
-      releaseName: linkerd2-vz
+      releaseName: linkerd-viz
       values: |
          
   destination:
