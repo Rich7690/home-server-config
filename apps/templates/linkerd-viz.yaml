@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: linkerd2-viz
+  namespace: argocd
+spec:
+  project: remote-apps
+  source:
+    chart: linkerd2-viz
+    repoURL: https://helm.linkerd.io/stable
+    targetRevision: 2.11.3
+    helm:
+      releaseName: linkerd2-vz
+      values: |
+         
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
