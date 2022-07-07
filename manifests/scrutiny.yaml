@@ -16,6 +16,8 @@ spec:
     type: Recreate
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: scrutiny
     spec:

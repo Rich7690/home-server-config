@@ -22,6 +22,7 @@ spec:
       annotations:
         vault.security.banzaicloud.io/vault-tls-secret: vault-tls
         vault.security.banzaicloud.io/vault-env-from-path: "secret/data/deploy/keycloak"
+        linkerd.io/inject: enabled
       labels:
         app: keycloak
     spec:

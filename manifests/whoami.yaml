@@ -12,6 +12,8 @@ spec:
       app: whoami
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: whoami
     spec:
