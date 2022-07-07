@@ -12,6 +12,8 @@ spec:
     helm:
       releaseName: prowlarr
       values: |
+        podAnnotations:
+          linkerd.io/inject: enabled
         env:
             TZ: America/Los_Angeles
         image:

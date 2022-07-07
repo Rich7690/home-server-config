@@ -18,8 +18,10 @@ spec:
     metadata:
       labels:
         app: jelly
+      annotations:
+        linkerd.io/inject: enabled
     spec:
-      automountServiceAccountToken: true 
+      automountServiceAccountToken: true
       containers:
         - securityContext:
             allowPrivilegeEscalation: false
@@ -86,7 +88,7 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext:
-        fsGroup: 997      
+        fsGroup: 997
         fsGroupChangePolicy: "OnRootMismatch"
       shareProcessNamespace: false
       terminationGracePeriodSeconds: 30

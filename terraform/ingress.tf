@@ -1,6 +1,9 @@
 resource "kubernetes_ingress_v1" "loki" {
   metadata {
     name = "loki"
+    annotations = {
+      "nginx.ingress.kubernetes.io/service-upstream" = "true"
+    }
   }
   spec {
     ingress_class_name = "nginx"
@@ -38,6 +41,7 @@ resource "kubernetes_ingress_v1" "scrutiny" {
       "app" = "scrutiny"
     }
     annotations = {
+      "nginx.ingress.kubernetes.io/service-upstream"       = "true"
       "nginx.ingress.kubernetes.io/auth-signin"            = "https://${var.domain_name}/oauth2/sign_in"
       "nginx.ingress.kubernetes.io/auth-url"               = "https://${var.domain_name}/oauth2/auth"
       "nginx.ingress.kubernetes.io/whitelist-source-range" = "192.168.0.0/16,10.0.0.0/8"
@@ -79,12 +83,13 @@ resource "kubernetes_ingress_v1" "argo_CD" {
       "app" = "argo-cd"
     }
     annotations = {
+      "nginx.ingress.kubernetes.io/service-upstream"       = "true"
       "nginx.ingress.kubernetes.io/whitelist-source-range" = "192.168.0.0/16,10.0.0.0/8"
-      "ingress.kubernetes.io/protocol"                 = "https"
-      "ingress.kubernetes.io/secure-backends"          = "true"
-      "nginx.ingress.kubernetes.io/backend-protocol"   = "HTTPS"
-      "nginx.ingress.kubernetes.io/rewrite-target"     = "/"
-      "nginx.ingress.kubernetes.io/cors-allow-methods" = "PUT, GET, POST, DELETE, PATCH, OPTIONS"
+      "ingress.kubernetes.io/protocol"                     = "https"
+      "ingress.kubernetes.io/secure-backends"              = "true"
+      "nginx.ingress.kubernetes.io/backend-protocol"       = "HTTPS"
+      "nginx.ingress.kubernetes.io/rewrite-target"         = "/"
+      "nginx.ingress.kubernetes.io/cors-allow-methods"     = "PUT, GET, POST, DELETE, PATCH, OPTIONS"
     }
     namespace = "argocd"
   }
@@ -106,6 +111,55 @@ resource "kubernetes_ingress_v1" "argo_CD" {
               name = "argocd-server"
               port {
                 name = "http"
+              }
+            }
+
+          }
+        }
+      }
+    }
+  }
+}
+
+
+resource "kubernetes_ingress_v1" "linkerd" {
+  metadata {
+    name = "web-ingress"
+    labels = {
+      "app" = "linkerd"
+    }
+    annotations = {
+      "nginx.ingress.kubernetes.io/service-upstream"       = "true"
+      "nginx.ingress.kubernetes.io/auth-signin"            = "https://${var.domain_name}/oauth2/sign_in"
+      "nginx.ingress.kubernetes.io/auth-url"               = "https://${var.domain_name}/oauth2/auth"
+      "nginx.ingress.kubernetes.io/whitelist-source-range" = "192.168.0.0/16,10.0.0.0/8"
+      "nginx.ingress.kubernetes.io/upstream-vhost"         = "$service_name.$namespace.svc.cluster.local:8084"
+      "nginx.ingress.kubernetes.io/configuration-snippet"  = <<EOF
+      proxy_set_header Origin "";
+      proxy_hide_header l5d-remote-ip;
+      proxy_hide_header l5d-server-id; 
+      EOF
+    }
+    namespace = "linkerd-viz"
+  }
+  spec {
+    ingress_class_name = "nginx"
+    tls {
+      hosts       = ["${var.domain_name}", "*.${var.domain_name}"]
+      secret_name = "prod-cert"
+    }
+    rule {
+
+      host = "viz.${var.domain_name}"
+      http {
+        path {
+          path      = "/"
+          path_type = "ImplementationSpecific"
+          backend {
+            service {
+              name = "web"
+              port {
+                number = 8084
               }
             }
 

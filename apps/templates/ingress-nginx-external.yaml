@@ -13,6 +13,8 @@ spec:
       releaseName: ingress-nginx-external
       values: |
           controller:
+            podAnnotations:
+              linkerd.io/inject: enabled
             addHeaders:
               X-Frame-Options: SAMEORIGIN
             electionID: ingress-external-controller-leader
