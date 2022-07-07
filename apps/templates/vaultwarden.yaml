@@ -14,6 +14,7 @@ spec:
       values: |
         podAnnotations:
             vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+            linkerd.io/inject: enabled
         env:
           DATA_FOLDER: /work/storage/configs/vaultwarden
           DOMAIN: vault:secret/data/deploy/domain#vaultwarden_domain

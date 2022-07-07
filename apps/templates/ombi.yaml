@@ -12,6 +12,8 @@ spec:
     helm:
       releaseName: ombi
       values: |
+        podAnnotations:
+          linkerd.io/inject: enabled
         env:
             GUID: "997"
             PUID: "998"

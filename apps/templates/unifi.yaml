@@ -12,6 +12,8 @@ spec:
     helm:
       releaseName: unifi
       values: |
+        podAnnotations:
+          linkerd.io/inject: enabled
         env:
             TZ: America/Los_Angeles
         persistence:
