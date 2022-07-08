@@ -12,8 +12,6 @@ spec:
     helm:
       releaseName: radarr
       values: |
-        podAnnotations:
-          linkerd.io/inject: enabled
         securityContext:
             allowPrivilegeEscalation: false
             capabilities:

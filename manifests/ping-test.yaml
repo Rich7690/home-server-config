@@ -22,7 +22,6 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "http"
-        linkerd.io/inject: enabled
       labels:
         app: ping-test
     spec:

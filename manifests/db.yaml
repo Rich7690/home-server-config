@@ -19,7 +19,6 @@ spec:
       annotations:
         vault.security.banzaicloud.io/vault-tls-secret: vault-tls
         vault.security.banzaicloud.io/vault-env-from-path: "secret/data/deploy/db-secrets"
-        linkerd.io/inject: enabled
       labels:
         app: db
     spec:

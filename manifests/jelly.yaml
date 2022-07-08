@@ -18,8 +18,6 @@ spec:
     metadata:
       labels:
         app: jelly
-      annotations:
-        linkerd.io/inject: enabled
     spec:
       automountServiceAccountToken: true
       containers:

@@ -65,7 +65,6 @@ spec:
         vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
         vault.security.banzaicloud.io/vault-agent: "false"
         vault.security.banzaicloud.io/vault-role: "exportarr"
-        linkerd.io/inject: enabled
     spec:
       serviceAccountName: exportarr
       containers:

@@ -19,8 +19,6 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        linkerd.io/inject: enabled
       labels:
         app: redis
     spec:

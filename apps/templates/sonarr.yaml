@@ -12,8 +12,6 @@ spec:
     helm:
       releaseName: sonarr
       values: |
-        podAnnotations:
-          linkerd.io/inject: enabled
         securityContext:
             allowPrivilegeEscalation: false
             capabilities:

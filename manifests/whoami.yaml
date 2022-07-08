@@ -12,8 +12,6 @@ spec:
       app: whoami
   template:
     metadata:
-      annotations:
-        linkerd.io/inject: enabled
       labels:
         app: whoami
     spec:
@@ -74,8 +72,6 @@ spec:
       securityContext: {}
       shareProcessNamespace: false
       terminationGracePeriodSeconds: 30
-      nodeSelector:
-        katacontainers.io/kata-runtime: "true"
       tolerations:
         - key: CriticalAddonsOnly
           operator: Exists
