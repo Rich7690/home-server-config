@@ -17,7 +17,14 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-  ingress: []
+  ingress:
+    - from:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: victoria-metrics-single
+      ports:
+        - port: 9707
   egress:
     - to:
         - podSelector:
@@ -61,7 +68,7 @@ spec:
         app.kubernetes.io/instance: radarr-exporter
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "monitoring"
+        prometheus.io/port: "9707"
         vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
         vault.security.banzaicloud.io/vault-agent: "false"
         vault.security.banzaicloud.io/vault-role: "exportarr"
