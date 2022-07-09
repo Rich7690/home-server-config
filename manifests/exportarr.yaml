@@ -53,7 +53,6 @@ metadata:
     vault.security.banzaicloud.io/vault-role: "exportarr"
   labels:
     app.kubernetes.io/name: radarr-exporter
-    app.kubernetes.io/instance: radarr-exporter
 spec:
   replicas: 1
   revisionHistoryLimit: 3
