@@ -29,7 +29,7 @@ spec:
           automountServiceAccountToken: true
 
           containers:
-            - image: ghcr.io/rich7690/go-web-crawl:0.0.2@sha256:1ab387f4ff45cd6a41b10634f1d316666ed6ac2a47d5e6dec616e6c9fa8f8727
+            - image: ghcr.io/rich7690/go-web-crawl:0.0.3@sha256:72db5cf943216cd9390171548f2867ee06cbe1d671d66ea6dd07add3145c00a5
               imagePullPolicy: IfNotPresent
               name: savethespot
               resources:
