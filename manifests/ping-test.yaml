@@ -27,7 +27,7 @@ spec:
     spec:
       automountServiceAccountToken: true
       containers:
-        - image: ghcr.io/rtdev7690/ping-test:latest@sha256:91ba8499b44f3ccf0eafdfc21907e593004d2dad85e22d10beea35c29019b7d4
+        - image: ghcr.io/rich7690/ping-test:latest@sha256:91ba8499b44f3ccf0eafdfc21907e593004d2dad85e22d10beea35c29019b7d4
           imagePullPolicy: IfNotPresent
           readinessProbe:
             failureThreshold: 3
