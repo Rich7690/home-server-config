@@ -9,7 +9,7 @@ spec:
     source:
         chart: unifi
         repoURL: https://k8s-at-home.com/charts
-        targetRevision: 4.10.1
+        targetRevision: 5.0.0
         helm:
             releaseName: unifi
             values: |
