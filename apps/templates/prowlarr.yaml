@@ -1,37 +1,37 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prowlarr
-  namespace: argocd
+    name: prowlarr
+    namespace: argocd
 spec:
-  project: remote-apps
-  source:
-    chart: prowlarr
-    repoURL: https://k8s-at-home.com/charts
-    targetRevision: 4.4.2
-    helm:
-      releaseName: prowlarr
-      values: |
-        env:
-            TZ: America/Los_Angeles
-        image:
-            repository: ghcr.io/k8s-at-home/prowlarr
-            tag: v0.4.0.1802@sha256:6a49e194e0e3d2c9604ac8eecfddc00ff059d33909a3bc91bb6dbf2174f33686
-        persistence:
-            config:
-                enabled: true
-                hostPath: /work/storage/configs/prowlarr
-                hostPathType: Directory
-                mountPath: /config
-                type: hostPath
-        resources:
-            limits:
-                cpu: 4
-                memory: 1G
-            requests:
-                cpu: 200m
-                memory: 400Mi
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: default
-    
+    project: remote-apps
+    source:
+        chart: prowlarr
+        repoURL: https://k8s-at-home.com/charts
+        targetRevision: 4.4.2
+        helm:
+            releaseName: prowlarr
+            values: |
+                env:
+                    TZ: America/Los_Angeles
+                image:
+                    repository: ghcr.io/k8s-at-home/prowlarr
+                    tag: v0.4.0.1802@sha256:6a49e194e0e3d2c9604ac8eecfddc00ff059d33909a3bc91bb6dbf2174f33686
+                persistence:
+                    config:
+                        enabled: true
+                        hostPath: /work/storage/configs/prowlarr
+                        hostPathType: Directory
+                        mountPath: /config
+                        type: hostPath
+                resources:
+                    limits:
+                        cpu: 4
+                        memory: 1G
+                    requests:
+                        cpu: 200m
+                        memory: 400Mi
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default

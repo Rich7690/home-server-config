@@ -1,10 +1,11 @@
+---
 # This is a configmap with common variables I use for various containers that support the ENV VARS (mostly linuxserver containers)
 apiVersion: v1
 data:
-  PGID: "997"
-  PUID: "998"
-  TZ: America/Los_Angeles
+    PGID: '997'
+    PUID: '998'
+    TZ: America/Los_Angeles
 kind: ConfigMap
 metadata:
-  name: common-vars
-  namespace: default
+    name: common-vars
+    namespace: default

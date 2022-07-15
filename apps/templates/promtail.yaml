@@ -1,21 +1,21 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: promtail
-  namespace: argocd
+    name: promtail
+    namespace: argocd
 spec:
-  project: remote-apps
-  source:
-    chart: promtail
-    repoURL: https://grafana.github.io/helm-charts
-    targetRevision: 5.0.0
-    helm:
-      releaseName: promtail
-      values: |
-             config:
-               clients:
-                 - url: http://loki:3100/loki/api/v1/push
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: default
-    
+    project: remote-apps
+    source:
+        chart: promtail
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 5.0.0
+        helm:
+            releaseName: promtail
+            values: |
+                config:
+                  clients:
+                    - url: http://loki:3100/loki/api/v1/push
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default

@@ -1,6 +1,7 @@
+---
 spec:
-  destination:
-    server: https://kubernetes.default.svc
-  source:
-    repoURL: https://github.com/Rich7690/home-server-config
-    targetRevision: HEAD
+    destination:
+        server: https://kubernetes.default.svc
+    source:
+        repoURL: https://github.com/Rich7690/home-server-config
+        targetRevision: HEAD

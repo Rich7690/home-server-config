@@ -1,38 +1,38 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: owncloud-ocis
-  namespace: argocd
+    name: owncloud-ocis
+    namespace: argocd
 spec:
-  project: remote-apps
-  source:
-    chart: owncloud-ocis
-    repoURL: https://k8s-at-home.com/charts/
-    targetRevision: 2.3.2
-    helm:
-      releaseName: owncloud-ocis
-      values: |
-         env:
-           TZ: America/Los_Angeles
-           PROXY_TLS: "false"
-         image:
-           tag: 2.0.0-beta.3
-         persistence:
-           data:
-             enabled: true
-             subPath: data
-             type: hostPath
-             hostPathType: Directory
-             hostPath: /work/storage/configs/owncloud
-             mountPath: /var/lib/ocis
-           config:
-             enabled: true
-             subPath: config
-             type: hostPath
-             hostPathType: Directory
-             hostPath: /work/storage/configs/owncloud
-             mountPath: /etc/ocis
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: default
-    
+    project: remote-apps
+    source:
+        chart: owncloud-ocis
+        repoURL: https://k8s-at-home.com/charts/
+        targetRevision: 2.3.2
+        helm:
+            releaseName: owncloud-ocis
+            values: |
+                env:
+                  TZ: America/Los_Angeles
+                  PROXY_TLS: "false"
+                image:
+                  tag: 2.0.0-beta.3
+                persistence:
+                  data:
+                    enabled: true
+                    subPath: data
+                    type: hostPath
+                    hostPathType: Directory
+                    hostPath: /work/storage/configs/owncloud
+                    mountPath: /var/lib/ocis
+                  config:
+                    enabled: true
+                    subPath: config
+                    type: hostPath
+                    hostPathType: Directory
+                    hostPath: /work/storage/configs/owncloud
+                    mountPath: /etc/ocis
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default

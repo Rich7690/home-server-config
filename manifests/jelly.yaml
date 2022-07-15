@@ -1,101 +1,131 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: jelly
-  name: jelly
-  namespace: default
-spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app: jelly
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
+    labels:
         app: jelly
-    spec:
-      automountServiceAccountToken: true
-      containers:
-        - securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: false
-            runAsGroup: 997
-            runAsNonRoot: true
-            runAsUser: 998
-          env:
-            - name: JELLYFIN_CONFIG_DIR
-              value: /config
-            - name: JELLYFIN_DATA_DIR
-              value: /config/data
-          image: jellyfin/jellyfin:10.8.1@sha256:ee24f4459a40a17939e8cd73de5160cd3e55b8ded3dd82e9f51cb5fc6a3cf30a
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /health
-              port: 8096
-              scheme: HTTP
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: jelly
+    name: jelly
+    namespace: default
+spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+        matchLabels:
+            app: jelly
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                app: jelly
+        spec:
+            automountServiceAccountToken: true
+            containers:
+                - securityContext:
+                      allowPrivilegeEscalation: false
+                      capabilities:
+                          drop:
+                              - ALL
+                      privileged: false
+                      readOnlyRootFilesystem: false
+                      runAsGroup: 997
+                      runAsNonRoot: true
+                      runAsUser: 998
+                  env:
+                      - name: JELLYFIN_CONFIG_DIR
+                        value: /config
+                      - name: JELLYFIN_DATA_DIR
+                        value: /config/data
+                  image: jellyfin/jellyfin:10.8.1@sha256:ee24f4459a40a17939e8cd73de5160cd3e55b8ded3dd82e9f51cb5fc6a3cf30a
+                  imagePullPolicy: IfNotPresent
+                  livenessProbe:
+                      failureThreshold: 3
+                      httpGet:
+                          path: /health
+                          port: 8096
+                          scheme: HTTP
+                      initialDelaySeconds: 15
+                      periodSeconds: 10
+                      successThreshold: 1
+                      timeoutSeconds: 1
+                  name: jelly
+                  ports:
+                      - containerPort: 8096
+                        name: http
+                        protocol: TCP
+                  readinessProbe:
+                      failureThreshold: 3
+                      httpGet:
+                          path: /health
+                          port: 8096
+                          scheme: HTTP
+                      initialDelaySeconds: 15
+                      periodSeconds: 10
+                      successThreshold: 1
+                      timeoutSeconds: 1
+                  resources:
+                      limits:
+                          cpu: '16'
+                          memory: 4Gi
+                      requests:
+                          cpu: '2'
+                          memory: 2Gi
+                  terminationMessagePath: /dev/termination-log
+                  terminationMessagePolicy: File
+                  volumeMounts:
+                      - mountPath: /config
+                        mountPropagation: None
+                        name: config
+                      - mountPath: /media
+                        mountPropagation: None
+                        name: media
+            dnsPolicy: ClusterFirst
+            enableServiceLinks: true
+            nodeSelector:
+                kubernetes.io/hostname: debian-storage
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext:
+                fsGroup: 997
+                fsGroupChangePolicy: OnRootMismatch
+            shareProcessNamespace: false
+            terminationGracePeriodSeconds: 30
+            volumes:
+                - hostPath:
+                      path: /work/storage/configs/jelly
+                      type: Directory
+                  name: config
+                - hostPath:
+                      path: /media
+                      type: Directory
+                  name: media
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: jellyfin
+    namespace: default
+spec:
+    podSelector:
+        matchLabels:
+            app: jelly
+    ingress:
+        - from:
+              - podSelector: {}
+    egress:
+        - to:
+              - ipBlock:
+                    cidr: 0.0.0.0/0 # jellyfin can call out to internet for certain things, but it shouldn't access our local network ever
+                    except:
+                        - 10.0.0.0/8
+                        - 192.168.0.0/16
+                        - 172.16.0.0/12
+        - to:
+              - namespaceSelector: {}
+                podSelector:
+                    matchLabels:
+                        k8s-app: kube-dns
           ports:
-            - containerPort: 8096
-              name: http
-              protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /health
-              port: 8096
-              scheme: HTTP
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          resources:
-            limits:
-              cpu: "16"
-              memory: 4Gi
-            requests:
-              cpu: "2"
-              memory: 2Gi
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-            - mountPath: /config
-              mountPropagation: None
-              name: config
-            - mountPath: /media
-              mountPropagation: None
-              name: media
-      dnsPolicy: ClusterFirst
-      enableServiceLinks: true
-      nodeSelector:
-        kubernetes.io/hostname: debian-storage
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext:
-        fsGroup: 997
-        fsGroupChangePolicy: "OnRootMismatch"
-      shareProcessNamespace: false
-      terminationGracePeriodSeconds: 30
-      volumes:
-        - hostPath:
-            path: /work/storage/configs/jelly
-            type: Directory
-          name: config
-        - hostPath:
-            path: /media
-            type: Directory
-          name: media
+              - port: 53
+                protocol: UDP

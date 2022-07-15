@@ -1,67 +1,68 @@
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  labels:
-    app: savethespot
-  name: savethespot
-  namespace: cron
-spec:
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    metadata:
-      labels:
+    labels:
         app: savethespot
-    spec:
-      backoffLimit: 3
-      completions: 1
-      manualSelector: false
-      parallelism: 1
-      template:
+    name: savethespot
+    namespace: cron
+spec:
+    concurrencyPolicy: Forbid
+    failedJobsHistoryLimit: 1
+    jobTemplate:
         metadata:
-          labels:
-            app: savethespot
-          annotations:
-            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
-            vault.security.banzaicloud.io/vault-env-from-path: "secret/data/deploy/savethespot"
+            labels:
+                app: savethespot
         spec:
-          serviceAccountName: savethespot
-          automountServiceAccountToken: true
+            backoffLimit: 3
+            completions: 1
+            manualSelector: false
+            parallelism: 1
+            template:
+                metadata:
+                    labels:
+                        app: savethespot
+                    annotations:
+                        vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+                        vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/savethespot
+                spec:
+                    serviceAccountName: savethespot
+                    automountServiceAccountToken: true
 
-          containers:
-            - image: ghcr.io/rich7690/go-web-crawl:0.0.3@sha256:72db5cf943216cd9390171548f2867ee06cbe1d671d66ea6dd07add3145c00a5
-              imagePullPolicy: IfNotPresent
-              name: savethespot
-              resources:
-                limits:
-                  cpu: "4"
-                  memory: 1G
-                requests:
-                  cpu: 200m
-                  memory: 512Mi
-              terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File
-          dnsConfig:
-            options:
-              - name: ndots
-                value: "3"
-            searches:
-              - default.svc.cluster.local
-          dnsPolicy: ClusterFirst
-          enableServiceLinks: true
-          restartPolicy: Never
-          schedulerName: default-scheduler
-          securityContext: {}
-          shareProcessNamespace: false
-          terminationGracePeriodSeconds: 30
-  schedule: 0 16 2 * *
-  successfulJobsHistoryLimit: 1
-  suspend: false
+                    containers:
+                        - image: ghcr.io/rich7690/go-web-crawl:0.0.3@sha256:72db5cf943216cd9390171548f2867ee06cbe1d671d66ea6dd07add3145c00a5
+                          imagePullPolicy: IfNotPresent
+                          name: savethespot
+                          resources:
+                              limits:
+                                  cpu: '4'
+                                  memory: 1G
+                              requests:
+                                  cpu: 200m
+                                  memory: 512Mi
+                          terminationMessagePath: /dev/termination-log
+                          terminationMessagePolicy: File
+                    dnsConfig:
+                        options:
+                            - name: ndots
+                              value: '3'
+                        searches:
+                            - default.svc.cluster.local
+                    dnsPolicy: ClusterFirst
+                    enableServiceLinks: true
+                    restartPolicy: Never
+                    schedulerName: default-scheduler
+                    securityContext: {}
+                    shareProcessNamespace: false
+                    terminationGracePeriodSeconds: 30
+    schedule: 0 16 2 * *
+    successfulJobsHistoryLimit: 1
+    suspend: false
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: savethespot
-  namespace: cron
+    name: savethespot
+    namespace: cron
 ---
-
+...

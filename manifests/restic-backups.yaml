@@ -1,335 +1,336 @@
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  labels:
-    app: weekly-script
-  name: weekly-script
-  namespace: cron
-spec:
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    metadata:
-      labels:
+    labels:
         app: weekly-script
-      name: weekly-script
-    spec:
-      backoffLimit: 0
-      completions: 1
-      manualSelector: false
-      parallelism: 1
-      template:
+    name: weekly-script
+    namespace: cron
+spec:
+    concurrencyPolicy: Forbid
+    failedJobsHistoryLimit: 1
+    jobTemplate:
         metadata:
-          annotations:
-            vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/weekly-script
-            vault.security.banzaicloud.io/vault-role: default
-            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
-          labels:
-            app: weekly-script
-          name: weekly-script
+            labels:
+                app: weekly-script
+            name: weekly-script
         spec:
-          automountServiceAccountToken: true
-          containers:
-            - args:
-                - --
-                - /bin/weekly_script.sh
-              command:
-                - /bin/runitor
-              env:
-                - name: TZ
-                  value: America/Los_Angeles
-              image: ghcr.io/rich7690/restic-backup-docker:latest@sha256:25d448c1b0f8c152f9f875c75c9f3c722ee77821102ade09df03bc8d765cb577
-              imagePullPolicy: IfNotPresent
-              name: restic
-              resources:
-                limits:
-                  cpu: "16"
-                  memory: 16G
-                requests:
-                  cpu: "2"
-                  memory: 1G
-              terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File
-              volumeMounts:
-                - mountPath: /media
-                  mountPropagation: None
-                  name: media
-                - mountPath: /storage
-                  mountPropagation: None
-                  name: storage
-                - mountPath: /backup
-                  mountPropagation: None
-                  name: backup
-                - mountPath: /config/
-                  mountPropagation: None
-                  name: excludes-file
-                  readOnly: true
-                - mountPath: /secrets/pass_file.txt
-                  name: passfile
-                  readOnly: true
-                - mountPath: /secrets/rclone.conf
-                  name: rclone
-          dnsConfig:
-            options:
-              - name: ndots
-                value: "3"
-            searches:
-              - default.svc.cluster.local
-          dnsPolicy: ClusterFirst
-          enableServiceLinks: true
-          hostname: debian-server-restic
-          nodeSelector:
-            kubernetes.io/hostname: debian-storage
-          restartPolicy: Never
-          schedulerName: default-scheduler
-          securityContext: {}
-          shareProcessNamespace: false
-          terminationGracePeriodSeconds: 30
-          volumes:
-            - configMap:
-                defaultMode: 420
-                name: excludes-file
-                optional: false
-              name: excludes-file
-            - hostPath:
-                path: /cache
-                type: Directory
-              name: storage
-            - hostPath:
-                path: /media
-                type: Directory
-              name: media
-            - hostPath:
-                path: /backup
-                type: Directory
-              name: backup
-            - name: passfile # TODO: figure out how to actually move this to vault or somewhere. Last time I tried it was painful
-              hostPath:
-                path: /cache/pass_file.txt
-                type: File
-            - name: rclone
-              hostPath:
-                path: /cache/rclone.conf
-                type: File
+            backoffLimit: 0
+            completions: 1
+            manualSelector: false
+            parallelism: 1
+            template:
+                metadata:
+                    annotations:
+                        vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/weekly-script
+                        vault.security.banzaicloud.io/vault-role: default
+                        vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+                    labels:
+                        app: weekly-script
+                    name: weekly-script
+                spec:
+                    automountServiceAccountToken: true
+                    containers:
+                        - args:
+                              - --
+                              - /bin/weekly_script.sh
+                          command:
+                              - /bin/runitor
+                          env:
+                              - name: TZ
+                                value: America/Los_Angeles
+                          image: ghcr.io/rich7690/restic-backup-docker:latest@sha256:25d448c1b0f8c152f9f875c75c9f3c722ee77821102ade09df03bc8d765cb577
+                          imagePullPolicy: IfNotPresent
+                          name: restic
+                          resources:
+                              limits:
+                                  cpu: '16'
+                                  memory: 16G
+                              requests:
+                                  cpu: '2'
+                                  memory: 1G
+                          terminationMessagePath: /dev/termination-log
+                          terminationMessagePolicy: File
+                          volumeMounts:
+                              - mountPath: /media
+                                mountPropagation: None
+                                name: media
+                              - mountPath: /storage
+                                mountPropagation: None
+                                name: storage
+                              - mountPath: /backup
+                                mountPropagation: None
+                                name: backup
+                              - mountPath: /config/
+                                mountPropagation: None
+                                name: excludes-file
+                                readOnly: true
+                              - mountPath: /secrets/pass_file.txt
+                                name: passfile
+                                readOnly: true
+                              - mountPath: /secrets/rclone.conf
+                                name: rclone
+                    dnsConfig:
+                        options:
+                            - name: ndots
+                              value: '3'
+                        searches:
+                            - default.svc.cluster.local
+                    dnsPolicy: ClusterFirst
+                    enableServiceLinks: true
+                    hostname: debian-server-restic
+                    nodeSelector:
+                        kubernetes.io/hostname: debian-storage
+                    restartPolicy: Never
+                    schedulerName: default-scheduler
+                    securityContext: {}
+                    shareProcessNamespace: false
+                    terminationGracePeriodSeconds: 30
+                    volumes:
+                        - configMap:
+                              defaultMode: 420
+                              name: excludes-file
+                              optional: false
+                          name: excludes-file
+                        - hostPath:
+                              path: /cache
+                              type: Directory
+                          name: storage
+                        - hostPath:
+                              path: /media
+                              type: Directory
+                          name: media
+                        - hostPath:
+                              path: /backup
+                              type: Directory
+                          name: backup
+                        - name: passfile # TODO: figure out how to actually move this to vault or somewhere. Last time I tried it was painful
+                          hostPath:
+                              path: /cache/pass_file.txt
+                              type: File
+                        - name: rclone
+                          hostPath:
+                              path: /cache/rclone.conf
+                              type: File
 
-  schedule: 0 1 * * SUN
-  successfulJobsHistoryLimit: 1
-  suspend: false
+    schedule: 0 1 * * SUN
+    successfulJobsHistoryLimit: 1
+    suspend: false
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  labels:
-    app: weekly-prune
-  name: weekly-prune
-  namespace: cron
-spec:
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    metadata:
-      annotations:
-        diun.enable: "false"
-      labels:
+    labels:
         app: weekly-prune
-      name: weekly-prune
-    spec:
-      backoffLimit: 5
-      completions: 1
-      manualSelector: false
-      parallelism: 1
-      template:
+    name: weekly-prune
+    namespace: cron
+spec:
+    concurrencyPolicy: Forbid
+    failedJobsHistoryLimit: 1
+    jobTemplate:
         metadata:
-          annotations:
-            vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/weekly-prune
-            vault.security.banzaicloud.io/vault-role: default
-            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
-          labels:
-            app: weekly-prune
-          name: weekly-prune
+            annotations:
+                diun.enable: 'false'
+            labels:
+                app: weekly-prune
+            name: weekly-prune
         spec:
-          automountServiceAccountToken: true
-          containers:
-            - args:
-                - --
-                - /bin/weekly_prune.sh
-              command:
-                - /bin/runitor
-              env:
-                - name: TZ
-                  value: America/Los_Angeles
-              image: ghcr.io/rich7690/restic-backup-docker:latest@sha256:25d448c1b0f8c152f9f875c75c9f3c722ee77821102ade09df03bc8d765cb577
-              imagePullPolicy: IfNotPresent
-              name: restic
-              resources:
-                limits:
-                  cpu: "16"
-                  memory: 16G
-                requests:
-                  cpu: "2"
-                  memory: 1G
-              terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File
-              volumeMounts:
-                - mountPath: /storage
-                  mountPropagation: None
-                  name: backup # temporary hack until I rebuild the image
-                - mountPath: /backup
-                  mountPropagation: None
-                  name: backup
-                - mountPath: /config/
-                  mountPropagation: None
-                  name: excludes-file
-                  readOnly: true
-                - mountPath: /secrets/pass_file.txt
-                  name: passfile
-                  readOnly: true
-                - mountPath: /secrets/rclone.conf
-                  name: rclone
-          dnsConfig:
-            options:
-              - name: ndots
-                value: "3"
-            searches:
-              - default.svc.cluster.local
-          dnsPolicy: ClusterFirst
-          enableServiceLinks: true
-          hostname: debian-server-restic
-          nodeSelector:
-            kubernetes.io/hostname: debian-storage
-          restartPolicy: Never
-          schedulerName: default-scheduler
-          securityContext: {}
-          shareProcessNamespace: false
-          terminationGracePeriodSeconds: 30
-          volumes:
-            - configMap:
-                defaultMode: 420
-                name: excludes-file
-                optional: false
-              name: excludes-file
-            - hostPath:
-                path: /backup
-                type: Directory
-              name: backup
-            - name: passfile
-              hostPath:
-                path: /cache/pass_file.txt
-                type: File
-            - name: rclone
-              hostPath:
-                path: /cache/rclone.conf
-                type: File
-  schedule: 0 1 * * TUE
-  successfulJobsHistoryLimit: 1
-  suspend: false
+            backoffLimit: 5
+            completions: 1
+            manualSelector: false
+            parallelism: 1
+            template:
+                metadata:
+                    annotations:
+                        vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/weekly-prune
+                        vault.security.banzaicloud.io/vault-role: default
+                        vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+                    labels:
+                        app: weekly-prune
+                    name: weekly-prune
+                spec:
+                    automountServiceAccountToken: true
+                    containers:
+                        - args:
+                              - --
+                              - /bin/weekly_prune.sh
+                          command:
+                              - /bin/runitor
+                          env:
+                              - name: TZ
+                                value: America/Los_Angeles
+                          image: ghcr.io/rich7690/restic-backup-docker:latest@sha256:25d448c1b0f8c152f9f875c75c9f3c722ee77821102ade09df03bc8d765cb577
+                          imagePullPolicy: IfNotPresent
+                          name: restic
+                          resources:
+                              limits:
+                                  cpu: '16'
+                                  memory: 16G
+                              requests:
+                                  cpu: '2'
+                                  memory: 1G
+                          terminationMessagePath: /dev/termination-log
+                          terminationMessagePolicy: File
+                          volumeMounts:
+                              - mountPath: /storage
+                                mountPropagation: None
+                                name: backup # temporary hack until I rebuild the image
+                              - mountPath: /backup
+                                mountPropagation: None
+                                name: backup
+                              - mountPath: /config/
+                                mountPropagation: None
+                                name: excludes-file
+                                readOnly: true
+                              - mountPath: /secrets/pass_file.txt
+                                name: passfile
+                                readOnly: true
+                              - mountPath: /secrets/rclone.conf
+                                name: rclone
+                    dnsConfig:
+                        options:
+                            - name: ndots
+                              value: '3'
+                        searches:
+                            - default.svc.cluster.local
+                    dnsPolicy: ClusterFirst
+                    enableServiceLinks: true
+                    hostname: debian-server-restic
+                    nodeSelector:
+                        kubernetes.io/hostname: debian-storage
+                    restartPolicy: Never
+                    schedulerName: default-scheduler
+                    securityContext: {}
+                    shareProcessNamespace: false
+                    terminationGracePeriodSeconds: 30
+                    volumes:
+                        - configMap:
+                              defaultMode: 420
+                              name: excludes-file
+                              optional: false
+                          name: excludes-file
+                        - hostPath:
+                              path: /backup
+                              type: Directory
+                          name: backup
+                        - name: passfile
+                          hostPath:
+                              path: /cache/pass_file.txt
+                              type: File
+                        - name: rclone
+                          hostPath:
+                              path: /cache/rclone.conf
+                              type: File
+    schedule: 0 1 * * TUE
+    successfulJobsHistoryLimit: 1
+    suspend: false
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  labels:
-    app: sync-media
-  name: sync-media
-  namespace: cron
-spec:
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    metadata:
-      labels:
+    labels:
         app: sync-media
-      name: sync-media
-    spec:
-      backoffLimit: 5
-      completions: 1
-      manualSelector: false
-      parallelism: 1
-      template:
+    name: sync-media
+    namespace: cron
+spec:
+    concurrencyPolicy: Forbid
+    failedJobsHistoryLimit: 1
+    jobTemplate:
         metadata:
-          annotations:
-            vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/sync-media
-            vault.security.banzaicloud.io/vault-role: default
-            vault.security.banzaicloud.io/vault-tls-secret: vault-tls
-          labels:
-            app: sync-media
-          name: sync-media
+            labels:
+                app: sync-media
+            name: sync-media
         spec:
-          automountServiceAccountToken: true
-          containers:
-            - args:
-                - --
-                - /bin/sync-media.sh
-              command:
-                - /bin/runitor
-              env:
-                - name: TZ
-                  value: America/Los_Angeles
-              image: ghcr.io/rich7690/restic-backup-docker:latest@sha256:25d448c1b0f8c152f9f875c75c9f3c722ee77821102ade09df03bc8d765cb577
-              imagePullPolicy: IfNotPresent
-              name: restic
-              resources:
-                limits:
-                  cpu: "16"
-                  memory: 16G
-                requests:
-                  cpu: "2"
-                  memory: 1G
-              terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File
-              volumeMounts:
-                - mountPath: /media
-                  mountPropagation: None
-                  name: media
-                - mountPath: /backup
-                  mountPropagation: None
-                  name: backup
-                - mountPath: /config/
-                  mountPropagation: None
-                  name: excludes-file
-                  readOnly: true
-                - mountPath: /secrets/pass_file.txt
-                  name: passfile
-                  readOnly: true
-                - mountPath: /secrets/rclone.conf
-                  name: rclone
-          dnsConfig:
-            options:
-              - name: ndots
-                value: "3"
-            searches:
-              - default.svc.cluster.local
-          dnsPolicy: ClusterFirst
-          enableServiceLinks: true
-          hostname: debian-server-restic
-          nodeSelector:
-            kubernetes.io/hostname: debian-storage
-          restartPolicy: Never
-          schedulerName: default-scheduler
-          securityContext: {}
-          shareProcessNamespace: false
-          terminationGracePeriodSeconds: 30
-          volumes:
-            - configMap:
-                defaultMode: 420
-                name: excludes-file
-                optional: false
-              name: excludes-file
-            - hostPath:
-                path: /media
-                type: Directory
-              name: media
-            - hostPath:
-                path: /backup
-                type: Directory
-              name: backup
-            - name: passfile
-              hostPath:
-                path: /cache/pass_file.txt
-                type: File
-            - name: rclone
-              hostPath:
-                path: /cache/rclone.conf
-                type: File
-  schedule: 0 0 * * SAT,WED
-  successfulJobsHistoryLimit: 1
-  suspend: false
+            backoffLimit: 5
+            completions: 1
+            manualSelector: false
+            parallelism: 1
+            template:
+                metadata:
+                    annotations:
+                        vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/sync-media
+                        vault.security.banzaicloud.io/vault-role: default
+                        vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+                    labels:
+                        app: sync-media
+                    name: sync-media
+                spec:
+                    automountServiceAccountToken: true
+                    containers:
+                        - args:
+                              - --
+                              - /bin/sync-media.sh
+                          command:
+                              - /bin/runitor
+                          env:
+                              - name: TZ
+                                value: America/Los_Angeles
+                          image: ghcr.io/rich7690/restic-backup-docker:latest@sha256:25d448c1b0f8c152f9f875c75c9f3c722ee77821102ade09df03bc8d765cb577
+                          imagePullPolicy: IfNotPresent
+                          name: restic
+                          resources:
+                              limits:
+                                  cpu: '16'
+                                  memory: 16G
+                              requests:
+                                  cpu: '2'
+                                  memory: 1G
+                          terminationMessagePath: /dev/termination-log
+                          terminationMessagePolicy: File
+                          volumeMounts:
+                              - mountPath: /media
+                                mountPropagation: None
+                                name: media
+                              - mountPath: /backup
+                                mountPropagation: None
+                                name: backup
+                              - mountPath: /config/
+                                mountPropagation: None
+                                name: excludes-file
+                                readOnly: true
+                              - mountPath: /secrets/pass_file.txt
+                                name: passfile
+                                readOnly: true
+                              - mountPath: /secrets/rclone.conf
+                                name: rclone
+                    dnsConfig:
+                        options:
+                            - name: ndots
+                              value: '3'
+                        searches:
+                            - default.svc.cluster.local
+                    dnsPolicy: ClusterFirst
+                    enableServiceLinks: true
+                    hostname: debian-server-restic
+                    nodeSelector:
+                        kubernetes.io/hostname: debian-storage
+                    restartPolicy: Never
+                    schedulerName: default-scheduler
+                    securityContext: {}
+                    shareProcessNamespace: false
+                    terminationGracePeriodSeconds: 30
+                    volumes:
+                        - configMap:
+                              defaultMode: 420
+                              name: excludes-file
+                              optional: false
+                          name: excludes-file
+                        - hostPath:
+                              path: /media
+                              type: Directory
+                          name: media
+                        - hostPath:
+                              path: /backup
+                              type: Directory
+                          name: backup
+                        - name: passfile
+                          hostPath:
+                              path: /cache/pass_file.txt
+                              type: File
+                        - name: rclone
+                          hostPath:
+                              path: /cache/rclone.conf
+                              type: File
+    schedule: '@daily'
+    successfulJobsHistoryLimit: 1
+    suspend: true

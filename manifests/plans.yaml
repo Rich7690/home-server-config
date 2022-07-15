@@ -1,45 +1,46 @@
+---
 # Server plan
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
-  name: server-plan
-  namespace: system-upgrade
+    name: server-plan
+    namespace: system-upgrade
 spec:
-  concurrency: 1
-  cordon: false
-  nodeSelector:
-    matchExpressions:
-      - key: node-role.kubernetes.io/master
-        operator: In
-        values:
-          - "true"
-  tolerations:
-    - key: "node-role.kubernetes.io/master"
-      operator: "Exists"
-  serviceAccountName: system-upgrade
-  upgrade:
-    image: rancher/k3s-upgrade:v1.24.2-k3s2@sha256:93aff21fd859a3ab69bf11daeaf8528754a946791b233a4766b03c63836032bc
-  channel: https://update.k3s.io/v1-release/channels/v1.24
+    concurrency: 1
+    cordon: false
+    nodeSelector:
+        matchExpressions:
+            - key: node-role.kubernetes.io/master
+              operator: In
+              values:
+                  - 'true'
+    tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+    serviceAccountName: system-upgrade
+    upgrade:
+        image: rancher/k3s-upgrade:v1.24.2-k3s2@sha256:93aff21fd859a3ab69bf11daeaf8528754a946791b233a4766b03c63836032bc
+    channel: https://update.k3s.io/v1-release/channels/v1.24
 ---
 # Agent plan
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
-  name: agent-plan
-  namespace: system-upgrade
+    name: agent-plan
+    namespace: system-upgrade
 spec:
-  concurrency: 1
-  cordon: false
-  nodeSelector:
-    matchExpressions:
-      - key: node-role.kubernetes.io/master
-        operator: DoesNotExist
-  prepare:
-    args:
-      - prepare
-      - server-plan
-    image: rancher/k3s-upgrade:v1.24.2-k3s2@sha256:93aff21fd859a3ab69bf11daeaf8528754a946791b233a4766b03c63836032bc
-  serviceAccountName: system-upgrade
-  upgrade:
-    image: rancher/k3s-upgrade:v1.24.2-k3s2@sha256:93aff21fd859a3ab69bf11daeaf8528754a946791b233a4766b03c63836032bc
-  channel: https://update.k3s.io/v1-release/channels/v1.24
+    concurrency: 1
+    cordon: false
+    nodeSelector:
+        matchExpressions:
+            - key: node-role.kubernetes.io/master
+              operator: DoesNotExist
+    prepare:
+        args:
+            - prepare
+            - server-plan
+        image: rancher/k3s-upgrade:v1.24.2-k3s2@sha256:93aff21fd859a3ab69bf11daeaf8528754a946791b233a4766b03c63836032bc
+    serviceAccountName: system-upgrade
+    upgrade:
+        image: rancher/k3s-upgrade:v1.24.2-k3s2@sha256:93aff21fd859a3ab69bf11daeaf8528754a946791b233a4766b03c63836032bc
+    channel: https://update.k3s.io/v1-release/channels/v1.24

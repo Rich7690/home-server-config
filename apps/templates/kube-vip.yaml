@@ -1,21 +1,22 @@
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  labels:
-    app.kubernetes.io/name: kube-vip-ds
-    app.kubernetes.io/version: v0.4.4
-  name: kube-vip-ds
-  namespace: kube-system
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: kube-vip-ds
-  template:
-    metadata:
-      labels:
+    labels:
         app.kubernetes.io/name: kube-vip-ds
         app.kubernetes.io/version: v0.4.4
-    spec:
+    name: kube-vip-ds
+    namespace: kube-system
+spec:
+    selector:
+        matchLabels:
+            app.kubernetes.io/name: kube-vip-ds
+    template:
+        metadata:
+            labels:
+                app.kubernetes.io/name: kube-vip-ds
+                app.kubernetes.io/version: v0.4.4
+        spec:
       #      affinity:
       #        nodeAffinity:
       #          requiredDuringSchedulingIgnoredDuringExecution:
@@ -26,41 +27,41 @@ spec:
       #              - matchExpressions:
       #                  - key: node-role.kubernetes.io/control-plane
       #                    operator: Exists
-      containers:
-        - args:
-            - manager
-          env:
-            - name: vip_arp
-              value: "true"
-            - name: port
-              value: "6443"
-            - name: vip_cidr
-              value: "32"
-            - name: svc_enable
-              value: "true"
-            - name: vip_leaderelection
-              value: "true"
-            - name: vip_leaseduration
-              value: "5"
-            - name: vip_renewdeadline
-              value: "3"
-            - name: vip_retryperiod
-              value: "1"
-            - name: lb_enable
-              value: "true"
-            - name: lb_port
-              value: "6443"
-            - name: lb_fwdmethod
-              value: local
-          image: ghcr.io/kube-vip/kube-vip:v0.4.4@sha256:f59745f64f8e02158bc5aa70fb24e123e3f3891ca9bb86f8c259076e41a81924
-          imagePullPolicy: IfNotPresent
-          name: kube-vip
-          resources: {}
-          securityContext:
-            capabilities:
-              add:
-                - NET_ADMIN
-                - NET_RAW
-      hostNetwork: true
-      serviceAccountName: kube-vip
-  updateStrategy: {}
+            containers:
+                - args:
+                      - manager
+                  env:
+                      - name: vip_arp
+                        value: 'true'
+                      - name: port
+                        value: '6443'
+                      - name: vip_cidr
+                        value: '32'
+                      - name: svc_enable
+                        value: 'true'
+                      - name: vip_leaderelection
+                        value: 'true'
+                      - name: vip_leaseduration
+                        value: '5'
+                      - name: vip_renewdeadline
+                        value: '3'
+                      - name: vip_retryperiod
+                        value: '1'
+                      - name: lb_enable
+                        value: 'true'
+                      - name: lb_port
+                        value: '6443'
+                      - name: lb_fwdmethod
+                        value: local
+                  image: ghcr.io/kube-vip/kube-vip:v0.4.4@sha256:f59745f64f8e02158bc5aa70fb24e123e3f3891ca9bb86f8c259076e41a81924
+                  imagePullPolicy: IfNotPresent
+                  name: kube-vip
+                  resources: {}
+                  securityContext:
+                      capabilities:
+                          add:
+                              - NET_ADMIN
+                              - NET_RAW
+            hostNetwork: true
+            serviceAccountName: kube-vip
+    updateStrategy: {}

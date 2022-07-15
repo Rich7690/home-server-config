@@ -1,88 +1,89 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: db
-  name: db
-  namespace: default
-spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app: db
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      annotations:
-        vault.security.banzaicloud.io/vault-tls-secret: vault-tls
-        vault.security.banzaicloud.io/vault-env-from-path: "secret/data/deploy/db-secrets"
-      labels:
+    labels:
         app: db
-    spec:
-      automountServiceAccountToken: true
-      containers:
-        - securityContext:
-            runAsUser: 999
-            runAsGroup: 999
-            runAsNonRoot: true
-          image: mariadb:10.8.3@sha256:8be45db6728d9f755064b1553a20475120a962e49db52dff30f77c487c2da60d
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            exec:
-              command:
-                - /vault/vault-env
-                - /bin/bash
-                - -c
-                - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 15
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: db
-          ports:
-            - containerPort: 3306
-              name: db
-              protocol: TCP
-          readinessProbe:
-            exec:
-              command:
-                - /vault/vault-env
-                - /bin/bash
-                - -c
-                - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 15
-            successThreshold: 1
-            timeoutSeconds: 1
-          resources:
-            limits:
-              cpu: "4"
-              memory: 512Mi
-            requests:
-              cpu: 100m
-              memory: 256Mi
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-            - mountPath: /var/lib/mysql/
-              mountPropagation: None
-              name: config
-      dnsPolicy: ClusterFirst
-      enableServiceLinks: true
-      nodeSelector:
-        kubernetes.io/hostname: debian-storage
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      shareProcessNamespace: false
-      terminationGracePeriodSeconds: 30
-      volumes:
-        - hostPath:
-            path: /work/storage/configs/mysql/databases
-            type: Directory
-          name: config
+    name: db
+    namespace: default
+spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+        matchLabels:
+            app: db
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            annotations:
+                vault.security.banzaicloud.io/vault-tls-secret: vault-tls
+                vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/db-secrets
+            labels:
+                app: db
+        spec:
+            automountServiceAccountToken: true
+            containers:
+                - securityContext:
+                      runAsUser: 999
+                      runAsGroup: 999
+                      runAsNonRoot: true
+                  image: mariadb:10.8.3@sha256:8be45db6728d9f755064b1553a20475120a962e49db52dff30f77c487c2da60d
+                  imagePullPolicy: IfNotPresent
+                  livenessProbe:
+                      exec:
+                          command:
+                              - /vault/vault-env
+                              - /bin/bash
+                              - -c
+                              - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
+                      failureThreshold: 3
+                      initialDelaySeconds: 5
+                      periodSeconds: 15
+                      successThreshold: 1
+                      timeoutSeconds: 1
+                  name: db
+                  ports:
+                      - containerPort: 3306
+                        name: db
+                        protocol: TCP
+                  readinessProbe:
+                      exec:
+                          command:
+                              - /vault/vault-env
+                              - /bin/bash
+                              - -c
+                              - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
+                      failureThreshold: 3
+                      initialDelaySeconds: 5
+                      periodSeconds: 15
+                      successThreshold: 1
+                      timeoutSeconds: 1
+                  resources:
+                      limits:
+                          cpu: '4'
+                          memory: 512Mi
+                      requests:
+                          cpu: 100m
+                          memory: 256Mi
+                  terminationMessagePath: /dev/termination-log
+                  terminationMessagePolicy: File
+                  volumeMounts:
+                      - mountPath: /var/lib/mysql/
+                        mountPropagation: None
+                        name: config
+            dnsPolicy: ClusterFirst
+            enableServiceLinks: true
+            nodeSelector:
+                kubernetes.io/hostname: debian-storage
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: {}
+            shareProcessNamespace: false
+            terminationGracePeriodSeconds: 30
+            volumes:
+                - hostPath:
+                      path: /work/storage/configs/mysql/databases
+                      type: Directory
+                  name: config

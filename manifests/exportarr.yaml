@@ -1,110 +1,109 @@
+---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: exportarr
-  namespace: default
-
+    name: exportarr
+    namespace: default
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: exportarr-radarr
+    name: exportarr-radarr
 spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: radarr-exporter
-      app.kubernetes.io/instance: radarr-exporter
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
-        - namespaceSelector: {}
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: victoria-metrics-single
-      ports:
-        - port: 9707
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: radarr
-      ports:
-        - port: 7878
-    - to:
-        - namespaceSelector: {}
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
-      ports:
-        - port: 53
-          protocol: UDP
-
+    podSelector:
+        matchLabels:
+            app.kubernetes.io/name: radarr-exporter
+            app.kubernetes.io/instance: radarr-exporter
+    policyTypes:
+        - Ingress
+        - Egress
+    ingress:
+        - from:
+              - namespaceSelector: {}
+                podSelector:
+                    matchLabels:
+                        app.kubernetes.io/name: victoria-metrics-single
+          ports:
+              - port: 9707
+    egress:
+        - to:
+              - podSelector:
+                    matchLabels:
+                        app.kubernetes.io/name: radarr
+          ports:
+              - port: 7878
+        - to:
+              - namespaceSelector: {}
+                podSelector:
+                    matchLabels:
+                        k8s-app: kube-dns
+          ports:
+              - port: 53
+                protocol: UDP
 ---
 kind: Deployment #TODO: probably should just make this a sidecar on radarr/sonarr
 apiVersion: apps/v1
 metadata:
-  name: radarr-exporter
-  namespace: default
-  annotations:
-    vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
-    vault.security.banzaicloud.io/vault-agent: "false"
-    vault.security.banzaicloud.io/vault-role: "exportarr"
-  labels:
-    app.kubernetes.io/name: radarr-exporter
-spec:
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: radarr-exporter
-      app.kubernetes.io/instance: radarr-exporter
-  template:
-    metadata:
-      labels:
+    name: radarr-exporter
+    namespace: default
+    annotations:
+        vault.security.banzaicloud.io/vault-tls-secret: vault-tls # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
+        vault.security.banzaicloud.io/vault-agent: 'false'
+        vault.security.banzaicloud.io/vault-role: exportarr
+    labels:
         app.kubernetes.io/name: radarr-exporter
-        app.kubernetes.io/instance: radarr-exporter
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9707"
-        vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
-        vault.security.banzaicloud.io/vault-agent: "false"
-        vault.security.banzaicloud.io/vault-role: "exportarr"
-    spec:
-      serviceAccountName: exportarr
-      containers:
-        - name: radarr-exporter
-          image: ghcr.io/onedr0p/exportarr:v1.1.0@sha256:afd3a63b80c8a641a3bb20ff6088cb50c0501950687fbe2d57cac5282991c42a
-          imagePullPolicy: IfNotPresent
-          args:
-            - radarr
-          env:
-            - name: PORT
-              value: "9707"
-            - name: URL
-              value: "http://radarr.default.svc.cluster.local:7878/radarr"
-            - name: APIKEY
-              value: "vault:secret/data/deploy/radarr#radarr-api-key"
-          ports:
-            - name: monitoring
-              containerPort: 9707
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: monitoring
-            failureThreshold: 5
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: monitoring
-            failureThreshold: 5
-            periodSeconds: 10
-          resources:
-            requests:
-              cpu: 500m
-              memory: 64Mi
-            limits:
-              cpu: "4"
-              memory: 256Mi
+spec:
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+        matchLabels:
+            app.kubernetes.io/name: radarr-exporter
+            app.kubernetes.io/instance: radarr-exporter
+    template:
+        metadata:
+            labels:
+                app.kubernetes.io/name: radarr-exporter
+                app.kubernetes.io/instance: radarr-exporter
+            annotations:
+                prometheus.io/scrape: 'true'
+                prometheus.io/port: '9707'
+                vault.security.banzaicloud.io/vault-tls-secret: vault-tls # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
+                vault.security.banzaicloud.io/vault-agent: 'false'
+                vault.security.banzaicloud.io/vault-role: exportarr
+        spec:
+            serviceAccountName: exportarr
+            containers:
+                - name: radarr-exporter
+                  image: ghcr.io/onedr0p/exportarr:v1.1.0@sha256:afd3a63b80c8a641a3bb20ff6088cb50c0501950687fbe2d57cac5282991c42a
+                  imagePullPolicy: IfNotPresent
+                  args:
+                      - radarr
+                  env:
+                      - name: PORT
+                        value: '9707'
+                      - name: URL
+                        value: http://radarr.default.svc.cluster.local:7878/radarr
+                      - name: APIKEY
+                        value: vault:secret/data/deploy/radarr#radarr-api-key
+                  ports:
+                      - name: monitoring
+                        containerPort: 9707
+                  livenessProbe:
+                      httpGet:
+                          path: /healthz
+                          port: monitoring
+                      failureThreshold: 5
+                      periodSeconds: 10
+                  readinessProbe:
+                      httpGet:
+                          path: /healthz
+                          port: monitoring
+                      failureThreshold: 5
+                      periodSeconds: 10
+                  resources:
+                      requests:
+                          cpu: 500m
+                          memory: 64Mi
+                      limits:
+                          cpu: '4'
+                          memory: 256Mi

@@ -1,19 +1,19 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kube-state-metrics
-  namespace: argocd
+    name: kube-state-metrics
+    namespace: argocd
 spec:
-  project: remote-apps
-  source:
-    chart: kube-state-metrics
-    repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 4.7.0
-    helm:
-      releaseName: kube-state-metrics
-      values: |
+    project: remote-apps
+    source:
+        chart: kube-state-metrics
+        repoURL: https://prometheus-community.github.io/helm-charts
+        targetRevision: 4.7.0
+        helm:
+            releaseName: kube-state-metrics
+            values: |
 
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: default
-    
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default

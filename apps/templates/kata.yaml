@@ -1,12 +1,13 @@
+---
 apiVersion: node.k8s.io/v1
 handler: kata
 kind: RuntimeClass
 metadata:
-  name: kata
+    name: kata
 overhead:
-  podFixed:
-    cpu: 250m
-    memory: 130Mi
+    podFixed:
+        cpu: 250m
+        memory: 130Mi
 scheduling:
-  nodeSelector:
-    katacontainers.io/kata-runtime: "true"
+    nodeSelector:
+        katacontainers.io/kata-runtime: 'true'

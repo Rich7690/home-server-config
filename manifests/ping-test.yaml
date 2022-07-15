@@ -1,79 +1,80 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: ping-test
-  name: ping-test
-  namespace: default
-spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app: ping-test
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-    type: RollingUpdate
-  template:
-    metadata:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "http"
-      labels:
+    labels:
         app: ping-test
-    spec:
-      automountServiceAccountToken: true
-      containers:
-        - image: ghcr.io/rich7690/ping-test:latest@sha256:3f3910c8aa1723f71f2858f9e54615bf0906a503b5e1b6ca41b0cb691f0ff9f5
-          imagePullPolicy: IfNotPresent
-          readinessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /health
-              port: 2112
-              scheme: HTTP
-            initialDelaySeconds: 3
-            periodSeconds: 3
-            successThreshold: 1
-            timeoutSeconds: 1
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /health
-              port: 2112
-              scheme: HTTP
-            initialDelaySeconds: 3
-            periodSeconds: 3
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: ping-test
-          ports:
-            - containerPort: 2112
-              name: http
-              protocol: TCP
-          resources:
-            limits:
-              cpu: "4"
-              memory: 64Mi
-            requests:
-              cpu: 100m
-              memory: 64Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 65532
-            runAsNonRoot: true
-            runAsUser: 65532
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
-      enableServiceLinks: true
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      shareProcessNamespace: false
-      terminationGracePeriodSeconds: 30
+    name: ping-test
+    namespace: default
+spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+        matchLabels:
+            app: ping-test
+    strategy:
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+        type: RollingUpdate
+    template:
+        metadata:
+            annotations:
+                prometheus.io/scrape: 'true'
+                prometheus.io/port: http
+            labels:
+                app: ping-test
+        spec:
+            automountServiceAccountToken: true
+            containers:
+                - image: ghcr.io/rich7690/ping-test:latest@sha256:3f3910c8aa1723f71f2858f9e54615bf0906a503b5e1b6ca41b0cb691f0ff9f5
+                  imagePullPolicy: IfNotPresent
+                  readinessProbe:
+                      failureThreshold: 3
+                      httpGet:
+                          path: /health
+                          port: 2112
+                          scheme: HTTP
+                      initialDelaySeconds: 3
+                      periodSeconds: 3
+                      successThreshold: 1
+                      timeoutSeconds: 1
+                  livenessProbe:
+                      failureThreshold: 3
+                      httpGet:
+                          path: /health
+                          port: 2112
+                          scheme: HTTP
+                      initialDelaySeconds: 3
+                      periodSeconds: 3
+                      successThreshold: 1
+                      timeoutSeconds: 1
+                  name: ping-test
+                  ports:
+                      - containerPort: 2112
+                        name: http
+                        protocol: TCP
+                  resources:
+                      limits:
+                          cpu: '4'
+                          memory: 64Mi
+                      requests:
+                          cpu: 100m
+                          memory: 64Mi
+                  securityContext:
+                      allowPrivilegeEscalation: false
+                      privileged: false
+                      readOnlyRootFilesystem: true
+                      runAsGroup: 65532
+                      runAsNonRoot: true
+                      runAsUser: 65532
+                  terminationMessagePath: /dev/termination-log
+                  terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            enableServiceLinks: true
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: {}
+            shareProcessNamespace: false
+            terminationGracePeriodSeconds: 30

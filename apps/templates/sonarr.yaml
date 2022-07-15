@@ -1,59 +1,59 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sonarr
-  namespace: argocd
+    name: sonarr
+    namespace: argocd
 spec:
-  project: remote-apps
-  source:
-    chart: sonarr
-    repoURL: https://k8s-at-home.com/charts
-    targetRevision: 16.2.3
-    helm:
-      releaseName: sonarr
-      values: |
-        securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: false
-        podSecurityContext:
-            runAsUser: 998
-            runAsGroup: 997
-        env:
-            TZ: America/Los_Angeles
-        image:
-            repository: ghcr.io/k8s-at-home/sonarr
-            tag: v3.0.8.1507@sha256:605b635a083c6055382cd0efe729e99f6e0af7f48a35a2406892a50c2221caeb
-        persistence:
-            torrents:
-                enabled: true
-                hostPath: /media/Torrents
-                hostPathType: Directory
-                mountPath: /torrents
-                type: hostPath
-            media:
-                enabled: true
-                hostPath: /media
-                hostPathType: Directory
-                mountPath: /media
-                type: hostPath
-            config:
-                enabled: true
-                hostPath: /work/storage/configs/sonarr
-                hostPathType: Directory
-                mountPath: /config
-                type: hostPath
-        resources:
-            limits:
-                cpu: 4
-                memory: 1G
-            requests:
-                cpu: 500m
-                memory: 256Mi
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: default
-    
+    project: remote-apps
+    source:
+        chart: sonarr
+        repoURL: https://k8s-at-home.com/charts
+        targetRevision: 16.2.3
+        helm:
+            releaseName: sonarr
+            values: |
+                securityContext:
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                      drop:
+                        - ALL
+                    privileged: false
+                    readOnlyRootFilesystem: false
+                podSecurityContext:
+                    runAsUser: 998
+                    runAsGroup: 997
+                env:
+                    TZ: America/Los_Angeles
+                image:
+                    repository: ghcr.io/k8s-at-home/sonarr
+                    tag: v3.0.8.1507@sha256:605b635a083c6055382cd0efe729e99f6e0af7f48a35a2406892a50c2221caeb
+                persistence:
+                    torrents:
+                        enabled: true
+                        hostPath: /media/Torrents
+                        hostPathType: Directory
+                        mountPath: /torrents
+                        type: hostPath
+                    media:
+                        enabled: true
+                        hostPath: /media
+                        hostPathType: Directory
+                        mountPath: /media
+                        type: hostPath
+                    config:
+                        enabled: true
+                        hostPath: /work/storage/configs/sonarr
+                        hostPathType: Directory
+                        mountPath: /config
+                        type: hostPath
+                resources:
+                    limits:
+                        cpu: 4
+                        memory: 1G
+                    requests:
+                        cpu: 500m
+                        memory: 256Mi
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default

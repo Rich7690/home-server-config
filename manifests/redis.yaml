@@ -1,156 +1,157 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: redis
-  name: redis
-  namespace: default
-spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 3
-  selector:
-    matchLabels:
-      app: redis
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
+    labels:
         app: redis
-    spec:
-      automountServiceAccountToken: true
-      containers:
-        - command:
-            - redis-server
-            - --appendonly
-            - "yes"
-          image: redis:7-alpine@sha256:5916c280afae05baf0dc9a0cc82fa8e51477bdbfc72f60a5c14fd2b7735bcf07
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: 6379
-            timeoutSeconds: 1
-          name: redis
-          ports:
-            - containerPort: 6379
-              name: redis
-              protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            successThreshold: 1
-            tcpSocket:
-              port: 6379
-            timeoutSeconds: 1
-          resources:
-            limits:
-              cpu: "4"
-              memory: 512Mi
-            requests:
-              cpu: 100m
-              memory: 128Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              add:
-                - NET_RAW
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsGroup: 997
-            runAsNonRoot: true
-            runAsUser: 998
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-            - mountPath: /data
-              mountPropagation: None
-              name: data
-      dnsPolicy: ClusterFirst
-      enableServiceLinks: true
-      nodeSelector:
-        kubernetes.io/hostname: debian-storage
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      shareProcessNamespace: false
-      terminationGracePeriodSeconds: 30
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: redis
+    name: redis
+    namespace: default
+spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 3
+    selector:
+        matchLabels:
+            app: redis
+    strategy:
+        rollingUpdate:
+            maxSurge: 25%
+            maxUnavailable: 25%
+        type: RollingUpdate
+    template:
+        metadata:
+            labels:
+                app: redis
+        spec:
+            automountServiceAccountToken: true
+            containers:
+                - command:
+                      - redis-server
+                      - --appendonly
+                      - yes
+                  image: redis:7-alpine@sha256:5916c280afae05baf0dc9a0cc82fa8e51477bdbfc72f60a5c14fd2b7735bcf07
+                  imagePullPolicy: IfNotPresent
+                  livenessProbe:
+                      failureThreshold: 3
+                      initialDelaySeconds: 5
+                      periodSeconds: 10
+                      successThreshold: 1
+                      tcpSocket:
+                          port: 6379
+                      timeoutSeconds: 1
+                  name: redis
+                  ports:
+                      - containerPort: 6379
+                        name: redis
+                        protocol: TCP
+                  readinessProbe:
+                      failureThreshold: 3
+                      initialDelaySeconds: 5
+                      periodSeconds: 10
+                      successThreshold: 1
+                      tcpSocket:
+                          port: 6379
+                      timeoutSeconds: 1
+                  resources:
+                      limits:
+                          cpu: '4'
+                          memory: 512Mi
+                      requests:
+                          cpu: 100m
+                          memory: 128Mi
+                  securityContext:
+                      allowPrivilegeEscalation: false
+                      capabilities:
+                          add:
+                              - NET_RAW
+                          drop:
+                              - ALL
+                      privileged: false
+                      readOnlyRootFilesystem: true
+                      runAsGroup: 997
+                      runAsNonRoot: true
+                      runAsUser: 998
+                  terminationMessagePath: /dev/termination-log
+                  terminationMessagePolicy: File
+                  volumeMounts:
+                      - mountPath: /data
+                        mountPropagation: None
+                        name: data
+            dnsPolicy: ClusterFirst
+            enableServiceLinks: true
+            nodeSelector:
+                kubernetes.io/hostname: debian-storage
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext: {}
+            shareProcessNamespace: false
+            terminationGracePeriodSeconds: 30
+            volumes:
+                - name: data
+                  persistentVolumeClaim:
+                      claimName: redis
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  labels:
-    app: redis
-  name: redis
-  namespace: default
+    labels:
+        app: redis
+    name: redis
+    namespace: default
 spec:
-  egress: []
-  ingress:
-    - from:
-        - podSelector:
-            matchExpressions:
-              - key: app
-                operator: In
-                values:
-                  - renovate
-        - podSelector:
-            matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                  - paperless
-  podSelector:
-    matchLabels:
-      app: redis
-  policyTypes:
-    - Ingress
-    - Egress
+    egress: []
+    ingress:
+        - from:
+              - podSelector:
+                    matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                              - renovate
+              - podSelector:
+                    matchExpressions:
+                        - key: app.kubernetes.io/name
+                          operator: In
+                          values:
+                              - paperless
+    podSelector:
+        matchLabels:
+            app: redis
+    policyTypes:
+        - Ingress
+        - Egress
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  labels:
-    app: redis
-  name: redis
-  namespace: default
+    labels:
+        app: redis
+    name: redis
+    namespace: default
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5G
-  storageClassName: generic
-  volumeMode: Filesystem
-  volumeName: redis
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 5G
+    storageClassName: generic
+    volumeMode: Filesystem
+    volumeName: redis
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  labels:
-    app: redis
-  name: redis
+    labels:
+        app: redis
+    name: redis
 spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 5G
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: generic
-  volumeMode: Filesystem
-  hostPath:
-    type: Directory
-    path: /work/storage/configs/redis
+    accessModes:
+        - ReadWriteOnce
+    capacity:
+        storage: 5G
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: generic
+    volumeMode: Filesystem
+    hostPath:
+        type: Directory
+        path: /work/storage/configs/redis

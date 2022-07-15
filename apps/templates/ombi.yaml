@@ -1,39 +1,39 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ombi
-  namespace: argocd
+    name: ombi
+    namespace: argocd
 spec:
-  project: remote-apps
-  source:
-    chart: ombi
-    repoURL: https://k8s-at-home.com/charts
-    targetRevision: 11.4.0
-    helm:
-      releaseName: ombi
-      values: |
-        env:
-            GUID: "997"
-            PUID: "998"
-            TZ: America/Los_Angeles
-        image:
-            repository: ghcr.io/linuxserver/ombi
-            tag: 4.16.12
-        persistence:
-            config:
-                enabled: true
-                hostPath: /work/storage/configs/ombi
-                hostPathType: Directory
-                mountPath: /config
-                type: hostPath
-        resources:
-            limits:
-                cpu: 4
-                memory: 500Mi
-            requests:
-                cpu: 300m
-                memory: 250Mi
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: default
-    
+    project: remote-apps
+    source:
+        chart: ombi
+        repoURL: https://k8s-at-home.com/charts
+        targetRevision: 11.4.0
+        helm:
+            releaseName: ombi
+            values: |
+                env:
+                    GUID: "997"
+                    PUID: "998"
+                    TZ: America/Los_Angeles
+                image:
+                    repository: ghcr.io/linuxserver/ombi
+                    tag: 4.16.12
+                persistence:
+                    config:
+                        enabled: true
+                        hostPath: /work/storage/configs/ombi
+                        hostPathType: Directory
+                        mountPath: /config
+                        type: hostPath
+                resources:
+                    limits:
+                        cpu: 4
+                        memory: 500Mi
+                    requests:
+                        cpu: 300m
+                        memory: 250Mi
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default
