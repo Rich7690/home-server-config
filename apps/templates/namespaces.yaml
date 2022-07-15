@@ -5,5 +5,3 @@ metadata:
     labels:
         kubernetes.io/metadata.name: cron
     name: cron
----
-...
