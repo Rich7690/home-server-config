@@ -9588,7 +9588,7 @@ spec:
                       - --save
                       - ''
                       - --appendonly
-                      - no
+                      - 'no'
                   image: redis:7.0.2-alpine@sha256:5916c280afae05baf0dc9a0cc82fa8e51477bdbfc72f60a5c14fd2b7735bcf07
                   imagePullPolicy: Always
                   name: redis
