@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: syncthing
+    namespace: argocd
+spec:
+    project: remote-apps
+    source:
+        chart: syncthing
+        repoURL: https://k8s-at-home.com/charts/
+        targetRevision: 3.4.2
+        helm:
+            releaseName: syncthing
+            values: |
+                env:
+                    PGID: 997
+                    PUID: 998
+                    TZ: America/Los_Angeles
+                    image:
+                    tag: 1.20.1
+                persistence:
+                    config:
+                        enabled: false
+                        hostPath: /work/storage/configs/syncthing
+                        hostPathType: Directory
+                        type: hostPath
+                    data:
+                        enabled: true
+                        hostPath: /work/storage/configs/syncthing
+                        hostPathType: Directory
+                        type: hostPath
+    destination:
+        server: https://kubernetes.default.svc
+        namespace: default

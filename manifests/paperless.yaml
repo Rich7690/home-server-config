@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/name: paperless
+  name: paperless
+  namespace: default
+spec:
+  ingress:
+    - from:
+        - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: paperless
+  policyTypes:
+    - Ingress
