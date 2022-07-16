@@ -17,7 +17,7 @@ spec:
                     PGID: 997
                     PUID: 998
                     TZ: America/Los_Angeles
-                    image:
+                image:
                     tag: 1.20.1
                 persistence:
                     config:

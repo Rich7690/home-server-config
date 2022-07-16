@@ -9,23 +9,19 @@ spec:
     source:
         chart: paperless
         repoURL: https://k8s-at-home.com/charts/
-        targetRevision: 5.0.0
+        targetRevision: 9.0.0
         helm:
             releaseName: paperless
             values: |
                 podAnnotations:
                     vault.security.banzaicloud.io/vault-tls-secret: vault-tls
                     vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/paperless
-                additionalContainers: ""
                 controller:
                     replicas: 1
                 env:
                     PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME: HTTP_X_AUTH_REQUEST_PREFERRED_USERNAME
                     PAPERLESS_ENABLE_HTTP_REMOTE_USER: true
-                    PAPERLESS_ADMIN_PASSWORD: vault:
-                    PAPERLESS_ADMIN_USER: vault
                     PAPERLESS_REDIS: redis://redis:6379
-                    PAPERLESS_SECRET_KEY: vault:
                     PAPERLESS_TIME_ZONE: America/Los_Angeles
                     USERMAP_GID: 997
                     USERMAP_UID: 998
