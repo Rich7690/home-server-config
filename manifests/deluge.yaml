@@ -53,7 +53,7 @@ spec:
                           cpu: 500m
                           memory: 256Mi
                   securityContext:
-                      allowPrivilegeEscalation: true
+                      allowPrivilegeEscalation: false
                       capabilities:
                           add:
                               - NET_ADMIN

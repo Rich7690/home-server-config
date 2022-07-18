@@ -29,6 +29,7 @@ spec:
                       runAsUser: 999
                       runAsGroup: 999
                       runAsNonRoot: true
+                      allowPrivilegeEscalation: false
                   image: mariadb:10.8.3@sha256:8be45db6728d9f755064b1553a20475120a962e49db52dff30f77c487c2da60d
                   imagePullPolicy: IfNotPresent
                   livenessProbe:
