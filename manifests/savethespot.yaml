@@ -28,11 +28,18 @@ spec:
                 spec:
                     serviceAccountName: savethespot
                     automountServiceAccountToken: true
-
                     containers:
                         - image: ghcr.io/rich7690/go-web-crawl:0.0.3@sha256:72db5cf943216cd9390171548f2867ee06cbe1d671d66ea6dd07add3145c00a5
                           imagePullPolicy: IfNotPresent
                           name: savethespot
+                          securityContext:
+                            allowPrivilegeEscalation: false
+                            capabilities:
+                                drop:
+                                    - ALL
+                            privileged: false
+                            readOnlyRootFilesystem: true
+                            runAsNonRoot: true
                           resources:
                               limits:
                                   cpu: '4'
@@ -52,7 +59,6 @@ spec:
                     enableServiceLinks: true
                     restartPolicy: Never
                     schedulerName: default-scheduler
-                    securityContext: {}
                     shareProcessNamespace: false
                     terminationGracePeriodSeconds: 30
     schedule: 0 16 2 * *

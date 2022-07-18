@@ -9,10 +9,12 @@ spec:
     source:
         chart: vaultwarden
         repoURL: https://k8s-at-home.com/charts
-        targetRevision: 4.2.3
+        targetRevision: 5.0.0
         helm:
             releaseName: vaultwarden
             values: |
+                image:
+                  tag: 1.25.1-alpine@sha256:d75a3780af0455f7af3f34369cf814e55d69c5d258f02ac3c080e5805b9f4eec
                 podAnnotations:
                     vault.security.banzaicloud.io/vault-tls-secret: vault-tls
                 env:

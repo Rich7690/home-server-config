@@ -27,11 +27,18 @@ spec:
                           imagePullPolicy: IfNotPresent
                           tty: true
                           stdin: true
+                          securityContext:
+                            allowPrivilegeEscalation: false
+                            capabilities:
+                                drop:
+                                    - ALL
+                            privileged: false
+                            readOnlyRootFilesystem: true
+                            runAsNonRoot: true
                           command:
                               - bash
                               - -c
                               - export GPG_TTY=$(tty) && echo $(tty) && renovate Rich7690/home-server-config
-              # Environment Variables
                           env:
                               - name: LOG_LEVEL
                                 value: info

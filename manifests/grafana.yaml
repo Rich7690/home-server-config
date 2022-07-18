@@ -43,11 +43,11 @@ spec:
                           cpu: 250m
                           memory: 256Mi
                   securityContext:
-                      allowPrivilegeEscalation: true
+                      allowPrivilegeEscalation: false
                       privileged: false
                       readOnlyRootFilesystem: false
                       runAsGroup: 997
-                      runAsNonRoot: false
+                      runAsNonRoot: true
                       runAsUser: 998
                   terminationMessagePath: /dev/termination-log
                   terminationMessagePolicy: File

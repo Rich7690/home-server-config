@@ -120,3 +120,36 @@ resource "kubernetes_ingress_v1" "argo_CD" {
     }
   }
 }
+
+
+resource "kubernetes_ingress_v1" "iotawatt" {
+  metadata {
+    name = "iotawatt"
+  }
+  spec {
+    ingress_class_name = "nginx"
+    tls {
+      hosts       = ["*.${var.domain_name}", "${var.domain_name}"]
+      secret_name = "prod-cert"
+    }
+    rule {
+      host = "iotawatt.${var.domain_name}"
+      http {
+
+        path {
+          path_type = "ImplementationSpecific"
+          backend {
+            service {
+              name = "iotawatt"
+              port {
+                name = "http"
+              }
+            }
+          }
+          path = "/"
+        }
+      }
+    }
+  }
+
+}
