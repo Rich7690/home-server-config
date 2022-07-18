@@ -37,10 +37,13 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL'
+          # Some exceptions based on how we configure some of our pods. We should probably fix these at some point
           ignore-policy: |
-              exception[rules] {
+              package builtin.kubernetes.KSV023
 
-                  rules = ["KSV023"]
+              exception[rules] {
+                  input.metadata.name == "can-use-host-path"
+                  rules := [""]
               }
 
       - name: Upload Trivy scan results to GitHub Security tab
