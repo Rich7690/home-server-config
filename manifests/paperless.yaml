@@ -10,8 +10,8 @@ spec:
   ingress:
     - from:
         - podSelector:
-          matchLabels:
-            app.kubernetes.io/name: ingress-nginx
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
   podSelector:
     matchLabels:
       app.kubernetes.io/name: paperless
