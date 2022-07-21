@@ -4,3 +4,6 @@ kubeconfig
 terraform.tfstate
 *.backup
 secrets.yaml
+cp*.yaml
+talosconfig
+worker.yaml

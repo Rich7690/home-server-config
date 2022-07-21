@@ -23,7 +23,7 @@ spec:
                 metadata:
                     annotations:
                         vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/weekly-script
-                        vault.security.banzaicloud.io/vault-role: default
+                        vault.security.banzaicloud.io/vault-role: cron
                         vault.security.banzaicloud.io/vault-tls-secret: vault-tls
                     labels:
                         app: weekly-script
@@ -85,6 +85,7 @@ spec:
                     schedulerName: default-scheduler
                     securityContext: {}
                     shareProcessNamespace: false
+                    serviceAccountName: cron
                     terminationGracePeriodSeconds: 30
                     volumes:
                         - configMap:
@@ -143,7 +144,7 @@ spec:
                 metadata:
                     annotations:
                         vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/weekly-prune
-                        vault.security.banzaicloud.io/vault-role: default
+                        vault.security.banzaicloud.io/vault-role: cron
                         vault.security.banzaicloud.io/vault-tls-secret: vault-tls
                     labels:
                         app: weekly-prune
@@ -202,6 +203,7 @@ spec:
                     schedulerName: default-scheduler
                     securityContext: {}
                     shareProcessNamespace: false
+                    serviceAccountName: cron
                     terminationGracePeriodSeconds: 30
                     volumes:
                         - configMap:
@@ -249,7 +251,7 @@ spec:
                 metadata:
                     annotations:
                         vault.security.banzaicloud.io/vault-env-from-path: secret/data/deploy/cron-secrets,secret/data/deploy/sync-media
-                        vault.security.banzaicloud.io/vault-role: default
+                        vault.security.banzaicloud.io/vault-role: cron
                         vault.security.banzaicloud.io/vault-tls-secret: vault-tls
                     labels:
                         app: sync-media
@@ -301,6 +303,7 @@ spec:
                             - default.svc.cluster.local
                     dnsPolicy: ClusterFirst
                     enableServiceLinks: true
+                    serviceAccountName: cron
                     hostname: debian-server-restic
                     nodeSelector:
                         kubernetes.io/hostname: debian-storage
@@ -334,3 +337,23 @@ spec:
     schedule: '@daily'
     successfulJobsHistoryLimit: 1
     suspend: true
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: cron
+  namespace: cron
+secrets:
+  - name: cron-sa-token
+    namespace: cron
+automountServiceAccountToken: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cron-sa-token
+  namespace: cron
+  annotations:
+    kubernetes.io/service-account.name: cron
+type: kubernetes.io/service-account-token
+

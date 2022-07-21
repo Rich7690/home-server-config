@@ -86,6 +86,8 @@ spec:
                             privileged: false
                             readOnlyRootFilesystem: true
                             runAsNonRoot: true
+                            runAsGroup: 65532
+                            runAsUser: 65532
                   env:
                       - name: PORT
                         value: '9707'

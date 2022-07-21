@@ -15,6 +15,46 @@ spec:
             values: |
                 persistence:
                   enabled: true
+                  existingClaim: storage-loki-0
     destination:
         server: https://kubernetes.default.svc
         namespace: default
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: loki
+    release: loki
+  name: storage-loki-0
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: generic
+  volumeMode: Filesystem
+  volumeName: storage-loki-0
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: storage-loki-0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: storage-loki-0
+    namespace: default
+  hostPath:
+    path: /storage/volume/pvc-149f4163-9f15-4e5b-83e2-834464c1fe72_default_storage-loki-0
+    type: Directory
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: generic
+  volumeMode: Filesystem
