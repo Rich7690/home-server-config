@@ -95,3 +95,25 @@ kind: ConfigMap
 metadata:
     name: keycloak
     namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: keycloak
+  name: keycloak
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: keycloak
+  sessionAffinity: None
+  type: ClusterIP

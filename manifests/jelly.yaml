@@ -129,3 +129,25 @@ spec:
           ports:
               - port: 53
                 protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: jelly
+  name: jelly
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: jelly
+  sessionAffinity: None
+  type: ClusterIP

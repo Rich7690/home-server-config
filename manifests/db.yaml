@@ -32,35 +32,35 @@ spec:
                       allowPrivilegeEscalation: false
                   image: mariadb:10.8.3@sha256:8be45db6728d9f755064b1553a20475120a962e49db52dff30f77c487c2da60d
                   imagePullPolicy: IfNotPresent
-                  livenessProbe:
-                      exec:
-                          command:
-                              - /vault/vault-env
-                              - /bin/bash
-                              - -c
-                              - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
-                      failureThreshold: 3
-                      initialDelaySeconds: 5
-                      periodSeconds: 15
-                      successThreshold: 1
-                      timeoutSeconds: 1
+                  # livenessProbe: # TODO: this breaks a lot and I don't know why. Fix it soon
+                  #     exec:
+                  #         command:
+                  #             - /vault/vault-env
+                  #             - /bin/bash
+                  #             - -c
+                  #             - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
+                  #     failureThreshold: 3
+                  #     initialDelaySeconds: 5
+                  #     periodSeconds: 15
+                  #     successThreshold: 1
+                  #     timeoutSeconds: 1
                   name: db
                   ports:
                       - containerPort: 3306
                         name: db
                         protocol: TCP
-                  readinessProbe:
-                      exec:
-                          command:
-                              - /vault/vault-env
-                              - /bin/bash
-                              - -c
-                              - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
-                      failureThreshold: 3
-                      initialDelaySeconds: 5
-                      periodSeconds: 15
-                      successThreshold: 1
-                      timeoutSeconds: 1
+                  # readinessProbe:
+                  #     exec:
+                  #         command:
+                  #             - /vault/vault-env
+                  #             - /bin/bash
+                  #             - -c
+                  #             - mysqlshow -u root -p$MYSQL_ROOT_PASSWORD
+                  #     failureThreshold: 3
+                  #     initialDelaySeconds: 5
+                  #     periodSeconds: 15
+                  #     successThreshold: 1
+                  #     timeoutSeconds: 1
                   resources:
                       limits:
                           cpu: '4'
@@ -88,3 +88,25 @@ spec:
                       path: /work/storage/configs/mysql/databases
                       type: Directory
                   name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: db
+  name: db
+  namespace: default
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: db
+    port: 3306
+    protocol: TCP
+    targetPort: db
+  selector:
+    app: db
+  sessionAffinity: None
+  type: ClusterIP

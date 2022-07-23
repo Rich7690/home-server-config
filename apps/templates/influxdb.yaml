@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: influxdb
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 50Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: influxdb
+    namespace: default
+  hostPath:
+    path: /storage/volume/pvc-41f6aab1-a05e-4823-acbe-8300f5064a49_default_influxdb-influxdb2
+    type: Directory
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: generic
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: generic
+  volumeMode: Filesystem
+  volumeName: influxdb

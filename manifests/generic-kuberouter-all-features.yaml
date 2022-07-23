@@ -79,7 +79,7 @@ spec:
                   image: docker.io/cloudnativelabs/kube-router@sha256:ef79fa26a7f64b1271a1954466770abf78b2484bcf2e5e8fca8551dc4425021f
                   imagePullPolicy: Always
                   args:
-                      - --run-router=true
+                      - --run-router=false
                       - --run-firewall=true
                       - --run-service-proxy=false
                       - --bgp-graceful-restart=true
