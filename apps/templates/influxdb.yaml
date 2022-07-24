@@ -16,7 +16,7 @@ spec:
   hostPath:
     path: /storage/volume/pvc-41f6aab1-a05e-4823-acbe-8300f5064a49_default_influxdb-influxdb2
     type: Directory
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: generic
   volumeMode: Filesystem
 ---
