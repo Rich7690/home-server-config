@@ -37,11 +37,11 @@ spec:
                         protocol: TCP
                   resources:
                       limits:
-                          cpu: '4'
-                          memory: 64Mi
+                          cpu: '6'
+                          memory: 128Mi
                       requests:
-                          cpu: 100m
-                          memory: 64Mi
+                          cpu: '1'
+                          memory: 128Mi
                   securityContext:
                       allowPrivilegeEscalation: false # defaults true because of privileged and SYS_ADMIN
                       capabilities:

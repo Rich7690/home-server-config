@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: theila
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: theila
+  template:
+    metadata:
+      labels:
+        app: theila
+    spec:
+      volumes:
+        - name: talosconfig
+          secret:
+            secretName: talosconfig
+            items:
+              - key: talosconfig
+                path: talosconfig
+            optional: false
+      containers:
+      - name: theila
+        image: ghcr.io/siderolabs/theila:latest@sha256:fc10abb15c0fa2fd7a8a584646aa25865c8c01eb8424ab99d2ccb1d1ab9c29ea
+        securityContext:
+          allowPrivilegeEscalation: false
+          #runAsNonRoot: true
+          privileged: false
+          #runAsUser: 65532
+          #runAsGroup: 65532
+          capabilities:
+            drop:
+              - "ALL"
+        args:
+         - "--address"
+         - "0.0.0.0"
+        resources:
+          limits:
+            memory: "1G"
+            cpu: "500m"
+        env:
+          - name: TALOSCONFIG
+            value: /config/talosconfig
+        volumeMounts:
+          - name: talosconfig
+            mountPath: /config
+            readOnly: false
+        ports:
+        - containerPort: 8080
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: theila
+spec:
+  selector:
+    app: theila
+  ports:
+  - port: 80
+    targetPort: http
+    name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    labels:
+        app: theila
+    name: theila
+    namespace: default
+spec:
+    ingress:
+        - from:
+              - podSelector:
+                    matchLabels:
+                        app.kubernetes.io/name: ingress-nginx
+                        app.kubernetes.io/instance: ingress-nginx
+    podSelector:
+        matchLabels:
+            app: theila
+    policyTypes:
+        - Ingress
