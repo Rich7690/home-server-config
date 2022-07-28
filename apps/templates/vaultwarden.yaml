@@ -9,7 +9,7 @@ spec:
     source:
         chart: vaultwarden
         repoURL: https://k8s-at-home.com/charts
-        targetRevision: 5.0.0
+        targetRevision: 5.2.0
         helm:
             releaseName: vaultwarden
             values: |
