@@ -30,7 +30,7 @@ spec:
                       runAsGroup: 999
                       runAsNonRoot: true
                       allowPrivilegeEscalation: false
-                  image: mariadb:10.8.3@sha256:8be45db6728d9f755064b1553a20475120a962e49db52dff30f77c487c2da60d
+                  image: mariadb:10.8.3@sha256:31b72b164a6bf86d6d0df3e27be53682742b6078188802fc3d974298129a77a4
                   imagePullPolicy: IfNotPresent
                   # livenessProbe: # TODO: this breaks a lot and I don't know why. Fix it soon
                   #     exec:
