@@ -69,7 +69,7 @@ spec:
             serviceAccountName: kube-router
             containers:
                 - name: kube-router
-                  image: docker.io/cloudnativelabs/kube-router@sha256:ef79fa26a7f64b1271a1954466770abf78b2484bcf2e5e8fca8551dc4425021f
+                  image: docker.io/cloudnativelabs/kube-router@sha256:c27d42e49e11ba9fc7344bdc5b386c7daea94e664c395358218be3e86638fcbe
                   imagePullPolicy: Always
                   args:
                       - --run-router=false
@@ -109,7 +109,7 @@ spec:
                         readOnly: false
             initContainers:
                 - name: install-cni
-                  image: docker.io/cloudnativelabs/kube-router@sha256:ef79fa26a7f64b1271a1954466770abf78b2484bcf2e5e8fca8551dc4425021f
+                  image: docker.io/cloudnativelabs/kube-router@sha256:c27d42e49e11ba9fc7344bdc5b386c7daea94e664c395358218be3e86638fcbe
                   imagePullPolicy: Always
                   command:
                     - /bin/sh
