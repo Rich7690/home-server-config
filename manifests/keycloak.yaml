@@ -35,7 +35,7 @@ spec:
                   env:
                       - name: KEYCLOAK_STATISTICS
                         value: db,http
-                  image: quay.io/keycloak/keycloak:18.0.2-legacy@sha256:656d9d75a73a7ed094e36c67682396b76a6524ebd173fa9c5ea70145119fa1ba
+                  image: quay.io/keycloak/keycloak:19.0.1-legacy@sha256:3d4b71fcc2beeb4869d85d20fa868b68905afd26389a7109636228d55d6ad2b1
                   imagePullPolicy: IfNotPresent
                   livenessProbe:
                       failureThreshold: 3
